@@ -30,7 +30,7 @@
             <li><strong>work mail:</strong> <a href="mailto:kfarwell@flirtu.al" target="_blank">kfarwell@flirtu.al</a></li>
             <li><strong>flirtual:</strong> <a href="https://flirtu.al/kfarwell" target="_blank">kfarwell</a></li>
             <li><strong>github:</strong> <a href="https://github.com/kfarwell" target="_blank">kfarwell</a></li>
-            <li><strong>discord:</strong> <a href="https://discordapp.com/users/439941042863603723" target="_blank">kfarwell#9999</a></li>
+            <li><strong>discord:</strong> <a href="https://discordapp.com/users/439941042863603723" target="_blank">kfarwell</a></li>
             <li><strong>vrchat:</strong> <a href="https://vrchat.com/home/user/usr_38b78e74-4af6-4b22-8531-e92b5283eca9" target="_blank">kfarwell</a></li>
             <li><strong>mahjong soul:</strong> <a href="https://mahjongsoul.game.yo-star.com/" target="_blank">119924197</a></li>
             <li><strong>steam:</strong> <a href="https://steamcommunity.com/id/kfarwell" target="_blank">kfarwell</a></li>
@@ -78,9 +78,9 @@
             <img src="mothracompat.gif" alt="100% mothra-compatible" width="291" height="96" />
             <a href="https://internetometer.com/give/47641"><img src="https://internetometer.com/image/47641.png" alt="Give me an internet" width="256" height="96" /></a>
             <a href="https://tamanotchi.world/1595c"><img src="https://tamanotchi.world/i2/1595" alt="Feed my tamaNOTchi" width="77" height="96" style="image-rendering: pixelated"></a>
+            <br />
+            <button id="toggle" onclick="toggleMode()">🌚</button>
         </footer>
-
-        <button id="toggle" onclick="toggleMode()">🌞</button>
 
         <iframe id="toasters" src="https://www.bryanbraun.com/after-dark-css/all/flying-toasters.html"></iframe>
 
@@ -128,8 +128,17 @@
                 }
             }
 
+            footer {
+                text-align: center;
+            }
+
             footer > a:hover {
                 filter: brightness(1.5);
+            }
+
+            #toggle {
+                font-size: 24px;
+                border-radius: 8px;
             }
 
             #toasters {
@@ -152,13 +161,13 @@
             var mode = "dark";
             function toggleMode() {
                 if (mode === "dark") {
-                    document.getElementById("toggle").textContent = "🌚";
+                    document.getElementById("toggle").textContent = "🌞";
                     document.getElementById("toasters").style.filter = "brightness(0.25) invert(1)";
                     document.body.style.backgroundColor = "#fff";
                     document.body.style.color = "#111";
                     mode = "light";
                 } else {
-                    document.getElementById("toggle").textContent = "🌞";
+                    document.getElementById("toggle").textContent = "🌚";
                     document.getElementById("toasters").style.filter = "brightness(0.25)";
                     document.body.style.backgroundColor = "#000";
                     document.body.style.color = "#eee";
