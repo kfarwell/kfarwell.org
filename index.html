@@ -71,6 +71,9 @@
             <li><a href="https://flirtu.al/about" target="_blank">The Flirtual Team</a></li>
         </ul>
 
+        <h2>music</h2>
+        <iframe id="applemusic" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" frameborder="0" height="450" style="width:100%;max-width:660px;overflow:hidden;border-radius:10px;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.music.apple.com/ca/playlist/some-music-i-like/pl.u-aZb0NorCPWvvDaR?theme=dark"></iframe>
+
         <h2>the end</h2>
         <p>thank you for visiting kfarwell.org have a nice day</p>
 
@@ -148,6 +151,10 @@
                 border-radius: 8px;
             }
 
+            #applemusic {
+                border: 4px solid #e9658b;
+            }
+
             #toasters {
                 position: fixed;
                 top: 0;
@@ -170,12 +177,14 @@
                 if (mode === "dark") {
                     document.getElementById("toggle").textContent = "🌞";
                     document.getElementById("toasters").style.filter = "brightness(0.25) invert(1)";
+                    document.getElementById("applemusic").src = "https://embed.music.apple.com/ca/playlist/some-music-i-like/pl.u-aZb0NorCPWvvDaR?theme=light";
                     document.body.style.backgroundColor = "#fff";
                     document.body.style.color = "#111";
                     mode = "light";
                 } else {
                     document.getElementById("toggle").textContent = "🌚";
                     document.getElementById("toasters").style.filter = "brightness(0.25)";
+                    document.getElementById("applemusic").src = "https://embed.music.apple.com/ca/playlist/some-music-i-like/pl.u-aZb0NorCPWvvDaR?theme=dark";
                     document.body.style.backgroundColor = "#000";
                     document.body.style.color = "#eee";
                     mode = "dark";
