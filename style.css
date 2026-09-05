@@ -1,0 +1,276 @@
+:root {
+    --background: #000;
+    --window: rgba(255, 255, 255, 0.75);
+}
+
+:root.light {
+    --background: #fff;
+    --window: rgba(171, 171, 171, 0.75);
+}
+
+html {
+    background-color: var(--background);
+    height: 100%;
+}
+
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    height: 100svh;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    justify-items: center;
+    align-items: center;
+    line-height: 1.6;
+    font-size: 18px;
+    color: #222;
+    font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", serif;
+}
+
+.window {
+    background: var(--window);
+    box-sizing: border-box;
+    position: relative;
+    font-family: inherit;
+    font-size: inherit;
+    width: 100%;
+    max-width: 636px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.window-body {
+    overflow-y: auto;
+    margin: 0;
+    padding: 20px;
+}
+
+#tamanotchi img, #buttons img {
+    image-rendering: pixelated;
+}
+
+#buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+}
+
+#buttons img {
+    flex: none;
+}
+
+.window.placed {
+    position: fixed;
+    margin: 0;
+    max-width: none;
+    max-height: none;
+}
+
+.window.minimized .window-body {
+    display: none;
+}
+
+.window[hidden] {
+    display: none;
+}
+
+#music-window {
+    display: none;
+}
+
+#screen {
+    display: contents;
+}
+
+.resizer {
+    display: none;
+    position: absolute;
+}
+.resizer-n, .resizer-s {
+    left: 0;
+    right: 0;
+    height: 6px;
+    cursor: ns-resize;
+}
+.resizer-e, .resizer-w {
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    cursor: ew-resize;
+}
+.resizer-n { top: -3px; }
+.resizer-s { bottom: -3px; }
+.resizer-e { right: -3px; }
+.resizer-w { left: -3px; }
+.resizer-ne, .resizer-nw, .resizer-se, .resizer-sw {
+    width: 12px;
+    height: 12px;
+    z-index: 1;
+}
+.resizer-ne, .resizer-nw { top: -3px; }
+.resizer-se, .resizer-sw { bottom: -3px; }
+.resizer-ne, .resizer-se { right: -3px; }
+.resizer-nw, .resizer-sw { left: -3px; }
+.resizer-nw, .resizer-se { cursor: nwse-resize; }
+.resizer-ne, .resizer-sw { cursor: nesw-resize; }
+
+h1 {
+    font-size: 2em;
+    line-height: 1.2;
+}
+h2 {
+    font-size: 1.5em;
+    line-height: 1.2;
+}
+
+a {
+    color: #e9658b;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+.favicon {
+    height: 1em;
+    padding-right: 0.3em;
+    transform: translateY(0.1em);
+}
+
+#header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2em;
+    align-items: center;
+}
+#header h1 {
+    margin-bottom: 0;
+}
+#header .field-border {
+    line-height: 0;
+}
+
+footer {
+    text-align: center;
+}
+
+footer > a:hover {
+    filter: brightness(1.5);
+}
+
+#toggle {
+    display: none;
+    font-size: 24px;
+    color: inherit;
+    text-shadow: none;
+}
+
+#applemusic {
+    max-width: 480px;
+    border: 4px solid #e9658b;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+@media (min-width: 656px) {
+    #dock {
+        position: fixed;
+        top: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #dock > * {
+        box-sizing: border-box;
+        width: 64px;
+        height: 64px;
+        background: url("nextstep-tile.png");
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #dock img {
+        width: auto;
+        height: 48px;
+    }
+
+    #dock #toggle {
+        border: none;
+        box-shadow: none;
+        min-width: 0;
+        min-height: 0;
+        padding: 0;
+        font-size: 32px;
+    }
+
+    #screen {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .window {
+        position: absolute;
+        height: auto;
+        max-height: 100%;
+    }
+
+    #main-window {
+        left: 32px;
+        top: 24px;
+        height: 60vh;
+        width: 636px;
+        max-width: calc(100vw - 64px);
+        z-index: 2;
+    }
+
+    #music-window {
+        display: flex;
+        background: #c0c0c0;
+        right: 32px;
+        bottom: 24px;
+        width: 420px;
+        max-width: calc(100vw - 64px);
+        z-index: 1;
+    }
+
+    #music-window h2 {
+        display: none;
+    }
+
+    #music-window .window-body {
+        padding: 0;
+    }
+
+    #music-window #applemusic {
+        display: block;
+        filter: brightness(1.028);
+        mix-blend-mode: multiply;
+        border: none;
+        border-radius: 0;
+    }
+
+    #buttons {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 4px;
+        max-height: 25vh;
+        overflow-y: auto;
+        align-content: flex-end;
+    }
+
+    .window .resizer {
+        display: block;
+    }
+}
+
+* {
+    cursor: url("cursor.png"), auto;
+}

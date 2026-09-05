@@ -1,0 +1,106 @@
+/**
+ * Flying Toasters, based on after-dark-css:
+ * https://github.com/bryanbraun/after-dark-css
+ *
+ * HTML & CSS copyright Bryan Braun, MIT license
+ * Original screensaver & images copyright Berkeley Systems
+ */
+#toasters {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -2;
+}
+
+#toasters .toaster, #toasters .toast {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+}
+#toasters .toaster {
+    background-image: url("toaster-sprite.gif");
+}
+#toasters .toast {
+    background-image: url("toast1.gif");
+}
+
+/**
+ * Toaster animations.
+ *
+ * t1 is fastest, t2 is mid speed & flaps out of sequence with t1,
+ * t3 is the common speed, t4 is a delayed batch at the fastest
+ * speed, and t5-t9 are delayed batches at the common speed.
+ */
+.t1 { animation: flap .2s steps(4) infinite alternate, fly 16s linear infinite; }
+.t2 { animation: flap .2s steps(4) infinite alternate-reverse, fly 25.6s linear infinite; }
+.t3 { animation: flap .2s steps(4) infinite alternate, fly 38.4s linear infinite; }
+.t4 { animation: flap .2s steps(4) infinite alternate, fly 16s 8s linear infinite; }
+.t5 { animation: flap .2s steps(4) infinite alternate-reverse, fly 38.4s 6.4s linear infinite; }
+.t6 { animation: flap .2s steps(4) infinite alternate, fly 38.4s 12.8s linear infinite; }
+.t7 { animation: flap .2s steps(4) infinite alternate-reverse, fly 38.4s 19.2s linear infinite; }
+.t8 { animation: flap .2s steps(4) infinite alternate, fly 38.4s 25.6s linear infinite; }
+.t9 { animation: flap .2s steps(4) infinite alternate-reverse, fly 38.4s 32s linear infinite; }
+
+/* Toast animations: tst1 fast, tst2 mid, tst3 common, tst4 delayed. */
+.tst1 { animation: fly 16s linear infinite; }
+.tst2 { animation: fly 25.6s linear infinite; }
+.tst3 { animation: fly 38.4s linear infinite; }
+.tst4 { animation: fly 38.4s 19.2s linear infinite; }
+
+/**
+ * Starting positions, one per object so they don't overlap,
+ * in percentages so they suit any window size. Organized into
+ * reverse "L" shaped batches to keep a constant flow.
+ */
+/* Batch 1 (-10% to -20%), top edge right to left */
+.p6 { right: -2%; top: -17%; }
+.p7 { right: 10%; top: -19%; }
+.p8 { right: 20%; top: -18%; }
+.p9 { right: 30%; top: -20%; }
+.p10 { right: 40%; top: -21%; }
+.p11 { right: 50%; top: -18%; }
+.p12 { right: 60%; top: -20%; }
+/* Right side, top to bottom */
+.p13 { right: -17%; top: 10%; }
+.p14 { right: -19%; top: 20%; }
+.p15 { right: -21%; top: 30%; }
+.p16 { right: -23%; top: 50%; }
+.p17 { right: -25%; top: 70%; }
+
+/* Batch 2 (-20% to -40%), top edge right to left */
+.p18 { right: 0%; top: -26%; }
+.p19 { right: 10%; top: -20%; }
+.p20 { right: 20%; top: -36%; }
+.p21 { right: 30%; top: -24%; }
+.p22 { right: 40%; top: -33%; }
+.p23 { right: 60%; top: -40%; }
+/* Right side, top to bottom */
+.p24 { right: -26%; top: 10%; }
+.p25 { right: -36%; top: 30%; }
+.p26 { right: -29%; top: 50%; }
+
+/* Batch 3 (-40% to -60%), top edge right to left */
+.p27 { right: 0; top: -46%; }
+.p28 { right: 10%; top: -56%; }
+.p29 { right: 20%; top: -49%; }
+.p30 { right: 30%; top: -60%; }
+/* Right side, top to bottom */
+.p31 { right: -46%; top: 10%; }
+.p32 { right: -56%; top: 20%; }
+.p33 { right: -49%; top: 30%; }
+
+@keyframes flap {
+    from { background-position: 0px; }
+    to { background-position: -256px; }
+}
+
+/* Moving 1600px down, to accommodate large screens. The real
+   toasters fly an isometric 2:1 path, so twice as far across. */
+@keyframes fly {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-3200px, 1600px); }
+}

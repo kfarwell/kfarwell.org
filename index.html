@@ -6,73 +6,116 @@
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="98.css">
+        <link rel="stylesheet" href="toasters.css">
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <div id="header">
-            <img id="me" src="kyle.png" alt="Kyle" width="128" height="128" />
-            <div>
-                <h1>Kyle Farwell</h1>
-                <p>Lead Developer @ Flirtual</p>
+        <div id="screen">
+            <div class="window" id="main-window">
+                <div class="title-bar">
+                    <div class="title-bar-text">kfarwell.org</div>
+                    <div class="title-bar-controls">
+                        <button id="minimize" aria-label="Minimize"></button>
+                        <button id="maximize" aria-label="Maximize"></button>
+                        <button id="close" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="window-body">
+                    <div id="header">
+                        <div class="field-border">
+                            <img id="me" src="kyle.png" alt="Kyle" width="128" height="128" />
+                        </div>
+                        <div>
+                            <h1>Kyle Farwell</h1>
+                            <p>Lead Developer @ Flirtual</p>
+                        </div>
+                </div>
+
+                <h2>who am I</h2>
+                <ul>
+                    <li>I'm building <a href="https://flirtual.com/" target="_blank"><img src="https://flirtual.com/favicon.ico" class="favicon" />Flirtual</a>, the first dating app for VR</li>
+                    <li>sometimes I make video games with <a href="https://gelatolabs.xyz/" target="_blank"><img src="https://gelatolabs.xyz/favicon.ico" class="favicon" />Gelato&nbsp;Labs</a></li>
+                    <li>interests: social vr, music, foss, unix, project diva, mahjong</li>
+                </ul>
+
+                <h2>stalk me</h2>
+                <p>if you are so inclined</p>
+                <ul>
+                    <li><strong>email:</strong> <a href="mailto:m@kfarwell.org" target="_blank">m@kfarwell.org</a></li>
+                    <li><strong>github:</strong> <a href="https://github.com/kfarwell" target="_blank">kfarwell</a></li>
+                    <li><strong>discord:</strong> <a href="https://discordapp.com/users/439941042863603723" target="_blank">kfarwell</a></li>
+                    <li><strong>x:</strong> <a href="https://x.com/notkfarwell" target="_blank">notkfarwell</a></li>
+                </ul>
+
+                <h2>testimonials</h2>
+                <ul>
+                    <li>"TECH GENIS" -Algoma University</li>
+                    <li>"you're well on your way to becoming a super user" -Keefer</li>
+                    <li>"kfarwell is the best dev ever" -Kritaka</li>
+                    <li>"kyle has anyone ever told you play a decisive role in the global configuration file /etc" -Markov chain</li>
+                    <li>"u want me to pay u for 99$ for premium of this SKid line of code?" -Simon</li>
+                    <li>"Kyle Farewell" -The Press</li>
+                </ul>
+
+                <h2>friends</h2>
+                <p>some cool people you should go admire or hire or star on github or something</p>
+                <ul style="column-width: 8em">
+                    <li><a href="https://alicedaltonsound.neocities.org" target="_blank">Alice&nbsp;Dalton</a></li>
+                    <li><a href="https://x.com/existony" target="_blank">Anthony&nbsp;Tan</a></li>
+                    <li><a href="https://ariesclark.com/" target="_blank">Aries&nbsp;Clark</a></li>
+                    <li><a href="https://www.twitch.tv/fuughoul" target="_blank">FuuGhoul</a>&nbsp;&lt;3</li>
+                    <li><a href="https://www.twitch.tv/gelatosquid" target="_blank">GelatoSquid</a></li>
+                    <li><a href="https://jaredkelly.ca/" target="_blank">Jared&nbsp;Kelly</a></li>
+                    <li><a href="https://x.com/KRastyr" target="_blank">Katten</a></li>
+                    <li><a href="https://krourke.org/" target="_blank">Keefer&nbsp;Rourke</a></li>
+                    <li><a href="https://sillylaird.ca/" target="_blank">Laird&nbsp;Lonergan</a></li>
+                    <li><a href="https://www.twitch.tv/loveallama" target="_blank">loveallama</a></li>
+                    <li><a href="https://github.com/fire219" target="_blank">Matthew&nbsp;Petry</a></li>
+                    <li><a href="https://www.linkedin.com/in/matthew-rose-5bb819128/" target="_blank">Matthew&nbsp;Rose</a></li>
+                    <li><a href="https://x.com/signseivr" target="_blank">Signsei</a></li>
+                    <li><a href="https://www.twitch.tv/zombi3doll" target="_blank">Zombi3Doll</a></li>
+                    <li><a href="https://flirtual.com/about" target="_blank">The&nbsp;Flirtual&nbsp;Team</a></li>
+                </ul>
+
+                <div id="music">
+                    <h2>music</h2>
+                    <iframe id="applemusic" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" frameborder="0" height="450" style="width:100%;overflow:hidden;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.music.apple.com/ca/playlist/pl.u-38oWZlWtPXjj6GZ?theme=light"></iframe>
+                </div>
+
+                <h2 id="the-end">the end</h2>
+                <p>thank you for visiting kfarwell.org have a nice day</p>
+
+                <hr />
+                <footer>
+                    <a href="https://internetometer.com/give/47641"><img src="https://internetometer.com/image/47641.png" alt="Give me an internet" width="256" height="96" /></a>
+                    <!-- The dock and the 88x31s move in here on mobile. -->
+                    <br id="footer-break" />
+                    <button id="toggle" onclick="toggleMode()">🌚</button>
+                </footer>
+                </div>
+            </div>
+
+            <div class="window" id="music-window">
+                <div class="title-bar">
+                    <div class="title-bar-text">Apple Music</div>
+                    <div class="title-bar-controls">
+                        <button aria-label="Minimize"></button>
+                        <button aria-label="Maximize"></button>
+                        <button aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="window-body"></div>
             </div>
         </div>
 
-        <h2>who am I</h2>
-        <ul>
-            <li>I'm building <a href="https://flirtual.com/" target="_blank"><img src="https://flirtual.com/favicon.ico" class="favicon" />Flirtual</a>, the first dating app for VR</li>
-            <li>sometimes I make video games with <a href="https://gelatolabs.xyz/" target="_blank"><img src="https://gelatolabs.xyz/favicon.ico" class="favicon" />Gelato&nbsp;Labs</a></li>
-            <li>interests: social vr, music, foss, unix, project diva, mahjong</li>
-        </ul>
+        <div id="dock"></div>
 
-        <h2>stalk me</h2>
-        <p>if you are so inclined</p>
-        <ul>
-            <li><strong>email:</strong> <a href="mailto:m@kfarwell.org" target="_blank">m@kfarwell.org</a></li>
-            <li><strong>github:</strong> <a href="https://github.com/kfarwell" target="_blank">kfarwell</a></li>
-            <li><strong>discord:</strong> <a href="https://discordapp.com/users/439941042863603723" target="_blank">kfarwell</a></li>
-            <li><strong>x:</strong> <a href="https://x.com/notkfarwell" target="_blank">notkfarwell</a></li>
-        </ul>
+            <a id="tamanotchi" href="https://tamanotchi.world/1595c">
+            <img src="https://tamanotchi.world/i2/1595" alt="Feed my tamaNOTchi" width="77" height="96" />
+            </a>
 
-        <h2>testimonials</h2>
-        <ul>
-            <li>"TECH GENIS" -Algoma University</li>
-            <li>"you're well on your way to becoming a super user" -Keefer</li>
-            <li>"kfarwell is the best dev ever" -Kritaka</li>
-            <li>"kyle has anyone ever told you play a decisive role in the global configuration file /etc" -Markov chain</li>
-            <li>"u want me to pay u for 99$ for premium of this SKid line of code?" -Simon</li>
-            <li>"Kyle Farewell" -The Press</li>
-        </ul>
-
-        <h2>friends</h2>
-        <p>some cool people you should go admire or hire or star on github or something</p>
-        <ul style="column-width: 8em">
-            <li><a href="https://alicedaltonsound.neocities.org" target="_blank">Alice&nbsp;Dalton</a></li>
-            <li><a href="https://x.com/existony" target="_blank">Anthony&nbsp;Tan</a></li>
-            <li><a href="https://ariesclark.com/" target="_blank">Aries&nbsp;Clark</a></li>
-            <li><a href="https://www.twitch.tv/fuughoul" target="_blank">FuuGhoul</a>&nbsp;&lt;3</li>
-            <li><a href="https://www.twitch.tv/gelatosquid" target="_blank">GelatoSquid</a></li>
-            <li><a href="https://jaredkelly.ca/" target="_blank">Jared&nbsp;Kelly</a></li>
-            <li><a href="https://x.com/KRastyr" target="_blank">Katten</a></li>
-            <li><a href="https://krourke.org/" target="_blank">Keefer&nbsp;Rourke</a></li>
-            <li><a href="https://sillylaird.ca/" target="_blank">Laird&nbsp;Lonergan</a></li>
-            <li><a href="https://www.twitch.tv/loveallama" target="_blank">loveallama</a></li>
-            <li><a href="https://github.com/fire219" target="_blank">Matthew&nbsp;Petry</a></li>
-            <li><a href="https://www.linkedin.com/in/matthew-rose-5bb819128/" target="_blank">Matthew&nbsp;Rose</a></li>
-            <li><a href="https://x.com/signseivr" target="_blank">Signsei</a></li>
-            <li><a href="https://www.twitch.tv/zombi3doll" target="_blank">Zombi3Doll</a></li>
-            <li><a href="https://flirtual.com/about" target="_blank">The&nbsp;Flirtual&nbsp;Team</a></li>
-        </ul>
-
-        <h2>music</h2>
-        <iframe id="applemusic" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" frameborder="0" height="450" style="width:100%;max-width:660px;overflow:hidden;border-radius:10px;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.music.apple.com/ca/playlist/pl.u-38oWZlWtPXjj6GZ?theme=dark"></iframe>
-
-        <h2>the end</h2>
-        <p>thank you for visiting kfarwell.org have a nice day</p>
-
-        <hr />
-        <footer>
-            <a href="https://internetometer.com/give/47641"><img src="https://internetometer.com/image/47641.png" alt="Give me an internet" width="256" height="96" /></a>
-            <a href="https://tamanotchi.world/1595c"><img src="https://tamanotchi.world/i2/1595" alt="Feed my tamaNOTchi" width="77" height="96" style="image-rendering: pixelated"></a>
-            <br />
+            <div id="buttons">
             <img src="ghpages.gif" />
             <img src="mothracompat.gif" />
             <img src="nekoscape.gif" />
@@ -95,11 +138,9 @@
             <img src="eff.png" />
             <img src="internetarchive.gif" />
             <img src="antibutton.gif" />
-            <br />
-            <button id="toggle" onclick="toggleMode()">🌚</button>
-        </footer>
+            </div>
 
-        <div id="toasters" aria-hidden="true">
+            <div id="toasters" aria-hidden="true">
             <div class="toaster t1 p6"></div>
             <div class="toaster t3 p7"></div>
             <div class="toast tst1 p8"></div>
@@ -151,205 +192,6 @@
             <div class="toaster t9 p26"></div>
         </div>
 
-        <style type="text/css">
-            body {
-                margin: 40px auto;
-                max-width: 636px;
-                line-height: 1.6;
-                font-size: 18px;
-                background-color: #000;
-                color: #eee;
-                padding: 0 10px;
-                font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", serif;
-            }
-
-            h1, h2 {
-                line-height: 1.2;
-            }
-
-            a {
-                color: #e9658b;
-                text-decoration: none;
-            }
-            a:hover {
-                text-decoration: underline;
-            }
-
-            .favicon {
-                height: 1em;
-                padding-right: 0.3em;
-                transform: translateY(0.1em);
-            }
-
-            #header {
-                display: flex;
-                gap: 2em;
-                align-items: center;
-            }
-            #header h1 {
-                margin-bottom: 0;
-            }
-            #header img {
-                border-radius: 50%;
-                box-shadow: 0 0 16px 2px #e9658b;
-                animation: pulse 1.5s linear infinite alternate;
-            }
-
-            @keyframes pulse {
-                to {
-                    box-shadow: 0 0 48px 6px #e9658b;
-                }
-            }
-
-            footer {
-                text-align: center;
-            }
-
-            footer > a:hover {
-                filter: brightness(1.5);
-            }
-
-            #toggle {
-                font-size: 24px;
-                border-radius: 8px;
-            }
-
-            #applemusic {
-                border: 4px solid #e9658b;
-            }
-
-            /**
-             * Flying Toasters, based on after-dark-css:
-             * https://github.com/bryanbraun/after-dark-css
-             *
-             * HTML & CSS copyright Bryan Braun, MIT license
-             * Original screensaver & images copyright Berkeley Systems
-             */
-            #toasters {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-                pointer-events: none;
-                filter: brightness(0.25);
-                z-index: -1;
-            }
-
-            #toasters .toaster, #toasters .toast {
-                position: absolute;
-                width: 64px;
-                height: 64px;
-            }
-            #toasters .toaster {
-                background-image: url("toaster-sprite.gif");
-            }
-            #toasters .toast {
-                background-image: url("toast1.gif");
-            }
-
-            /**
-             * Toaster animations.
-             *
-             * t1 is fastest, t2 is mid speed & flaps out of sequence with t1,
-             * t3 is the common speed, t4 is a delayed batch at the fastest
-             * speed, and t5-t9 are delayed batches at the common speed.
-             */
-            .t1 { animation: flap .2s steps(4) infinite alternate, fly 16s linear infinite; }
-            .t2 { animation: flap .2s steps(4) infinite alternate-reverse, fly 25.6s linear infinite; }
-            .t3 { animation: flap .2s steps(4) infinite alternate, fly 38.4s linear infinite; }
-            .t4 { animation: flap .2s steps(4) infinite alternate, fly 16s 8s linear infinite; }
-            .t5 { animation: flap .2s steps(4) infinite alternate-reverse, fly 38.4s 6.4s linear infinite; }
-            .t6 { animation: flap .2s steps(4) infinite alternate, fly 38.4s 12.8s linear infinite; }
-            .t7 { animation: flap .2s steps(4) infinite alternate-reverse, fly 38.4s 19.2s linear infinite; }
-            .t8 { animation: flap .2s steps(4) infinite alternate, fly 38.4s 25.6s linear infinite; }
-            .t9 { animation: flap .2s steps(4) infinite alternate-reverse, fly 38.4s 32s linear infinite; }
-
-            /* Toast animations: tst1 fast, tst2 mid, tst3 common, tst4 delayed. */
-            .tst1 { animation: fly 16s linear infinite; }
-            .tst2 { animation: fly 25.6s linear infinite; }
-            .tst3 { animation: fly 38.4s linear infinite; }
-            .tst4 { animation: fly 38.4s 19.2s linear infinite; }
-
-            /**
-             * Starting positions, one per object so they don't overlap,
-             * in percentages so they suit any window size. Organized into
-             * reverse "L" shaped batches to keep a constant flow.
-             */
-            /* Batch 1 (-10% to -20%), top edge right to left */
-            .p6 { right: -2%; top: -17%; }
-            .p7 { right: 10%; top: -19%; }
-            .p8 { right: 20%; top: -18%; }
-            .p9 { right: 30%; top: -20%; }
-            .p10 { right: 40%; top: -21%; }
-            .p11 { right: 50%; top: -18%; }
-            .p12 { right: 60%; top: -20%; }
-            /* Right side, top to bottom */
-            .p13 { right: -17%; top: 10%; }
-            .p14 { right: -19%; top: 20%; }
-            .p15 { right: -21%; top: 30%; }
-            .p16 { right: -23%; top: 50%; }
-            .p17 { right: -25%; top: 70%; }
-
-            /* Batch 2 (-20% to -40%), top edge right to left */
-            .p18 { right: 0%; top: -26%; }
-            .p19 { right: 10%; top: -20%; }
-            .p20 { right: 20%; top: -36%; }
-            .p21 { right: 30%; top: -24%; }
-            .p22 { right: 40%; top: -33%; }
-            .p23 { right: 60%; top: -40%; }
-            /* Right side, top to bottom */
-            .p24 { right: -26%; top: 10%; }
-            .p25 { right: -36%; top: 30%; }
-            .p26 { right: -29%; top: 50%; }
-
-            /* Batch 3 (-40% to -60%), top edge right to left */
-            .p27 { right: 0; top: -46%; }
-            .p28 { right: 10%; top: -56%; }
-            .p29 { right: 20%; top: -49%; }
-            .p30 { right: 30%; top: -60%; }
-            /* Right side, top to bottom */
-            .p31 { right: -46%; top: 10%; }
-            .p32 { right: -56%; top: 20%; }
-            .p33 { right: -49%; top: 30%; }
-
-            @keyframes flap {
-                from { background-position: 0px; }
-                to { background-position: -256px; }
-            }
-
-            /* Moving 1600px down, to accommodate large screens. The real
-               toasters fly an isometric 2:1 path, so twice as far across. */
-            @keyframes fly {
-                from { transform: translate(0, 0); }
-                to { transform: translate(-3200px, 1600px); }
-            }
-
-            * {
-                cursor: url("https://9front.org/img/cursor.png"), auto;
-            }
-        </style>
-
-        <script>
-            var mode = "dark";
-            function toggleMode() {
-                if (mode === "dark") {
-                    document.getElementById("toggle").textContent = "🌞";
-                    document.getElementById("toasters").style.filter = "brightness(0.25) invert(1)";
-                    document.getElementById("applemusic").src = "https://embed.music.apple.com/ca/playlist/some-music-i-like/pl.u-aZb0NorCPWvvDaR?theme=light";
-                    document.body.style.backgroundColor = "#fff";
-                    document.body.style.color = "#111";
-                    mode = "light";
-                } else {
-                    document.getElementById("toggle").textContent = "🌚";
-                    document.getElementById("toasters").style.filter = "brightness(0.25)";
-                    document.getElementById("applemusic").src = "https://embed.music.apple.com/ca/playlist/some-music-i-like/pl.u-aZb0NorCPWvvDaR?theme=dark";
-                    document.body.style.backgroundColor = "#000";
-                    document.body.style.color = "#eee";
-                    mode = "dark";
-                }
-            }
-        </script>
+        <script src="script.js"></script>
     </body>
 </html>
