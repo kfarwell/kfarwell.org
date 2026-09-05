@@ -64,6 +64,8 @@ function manage(win) {
         win.classList.add("placed");
         win.style.left = rect.left + "px";
         win.style.top = rect.top + "px";
+        win.style.right = "auto";
+        win.style.bottom = "auto";
         win.style.width = rect.width + "px";
         win.style.height = minimized ? "auto" : rect.height + "px";
     }
