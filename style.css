@@ -86,6 +86,10 @@ body {
     display: contents;
 }
 
+#catclock-window {
+    display: none;
+}
+
 .resizer {
     display: none;
     position: absolute;
@@ -222,10 +226,26 @@ footer > a:hover {
         max-height: 100%;
     }
 
-    #main-window {
+    #catclock-window {
+        display: flex;
         left: 32px;
         top: 24px;
-        height: 60vh;
+        width: auto;
+    }
+
+    /* The cat is the window's whole content. */
+    #catclock-window .window-body {
+        padding: 0;
+    }
+
+    #catclock {
+        display: block;
+    }
+
+    #main-window {
+        left: 92px;
+        top: 92px;
+        height: 75vh;
         width: 636px;
         max-width: calc(100vw - 64px);
         z-index: 2;
@@ -267,6 +287,15 @@ footer > a:hover {
 
     .window .resizer {
         display: block;
+    }
+}
+
+/* Wide enough to stand the main window beside the cat clock rather
+   than over it. */
+@media (min-width: 1320px) {
+    #main-window {
+        left: 220px;
+        top: 24px;
     }
 }
 
