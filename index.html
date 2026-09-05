@@ -256,21 +256,21 @@
              * t3 is the common speed, t4 is a delayed batch at the fastest
              * speed, and t5-t9 are delayed batches at the common speed.
              */
-            .t1 { animation: flap .2s steps(4) infinite alternate, fly 10s linear infinite; }
-            .t2 { animation: flap .2s steps(4) infinite alternate-reverse, fly 16s linear infinite; }
-            .t3 { animation: flap .2s steps(4) infinite alternate, fly 24s linear infinite; }
-            .t4 { animation: flap .2s steps(4) infinite alternate, fly 10s 5s linear infinite; }
-            .t5 { animation: flap .2s steps(4) infinite alternate-reverse, fly 24s 4s linear infinite; }
-            .t6 { animation: flap .2s steps(4) infinite alternate, fly 24s 8s linear infinite; }
-            .t7 { animation: flap .2s steps(4) infinite alternate-reverse, fly 24s 12s linear infinite; }
-            .t8 { animation: flap .2s steps(4) infinite alternate, fly 24s 16s linear infinite; }
-            .t9 { animation: flap .2s steps(4) infinite alternate-reverse, fly 24s 20s linear infinite; }
+            .t1 { animation: flap .2s steps(4) infinite alternate, fly 16s linear infinite; }
+            .t2 { animation: flap .2s steps(4) infinite alternate-reverse, fly 25.6s linear infinite; }
+            .t3 { animation: flap .2s steps(4) infinite alternate, fly 38.4s linear infinite; }
+            .t4 { animation: flap .2s steps(4) infinite alternate, fly 16s 8s linear infinite; }
+            .t5 { animation: flap .2s steps(4) infinite alternate-reverse, fly 38.4s 6.4s linear infinite; }
+            .t6 { animation: flap .2s steps(4) infinite alternate, fly 38.4s 12.8s linear infinite; }
+            .t7 { animation: flap .2s steps(4) infinite alternate-reverse, fly 38.4s 19.2s linear infinite; }
+            .t8 { animation: flap .2s steps(4) infinite alternate, fly 38.4s 25.6s linear infinite; }
+            .t9 { animation: flap .2s steps(4) infinite alternate-reverse, fly 38.4s 32s linear infinite; }
 
             /* Toast animations: tst1 fast, tst2 mid, tst3 common, tst4 delayed. */
-            .tst1 { animation: fly 10s linear infinite; }
-            .tst2 { animation: fly 16s linear infinite; }
-            .tst3 { animation: fly 24s linear infinite; }
-            .tst4 { animation: fly 24s 12s linear infinite; }
+            .tst1 { animation: fly 16s linear infinite; }
+            .tst2 { animation: fly 25.6s linear infinite; }
+            .tst3 { animation: fly 38.4s linear infinite; }
+            .tst4 { animation: fly 38.4s 19.2s linear infinite; }
 
             /**
              * Starting positions, one per object so they don't overlap,
@@ -319,10 +319,11 @@
                 to { background-position: -256px; }
             }
 
-            /* Moving 1600px, to accommodate large screens */
+            /* Moving 1600px down, to accommodate large screens. The real
+               toasters fly an isometric 2:1 path, so twice as far across. */
             @keyframes fly {
                 from { transform: translate(0, 0); }
-                to { transform: translate(-1600px, 1600px); }
+                to { transform: translate(-3200px, 1600px); }
             }
 
             * {
