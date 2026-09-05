@@ -233,7 +233,6 @@ footer > a:hover {
 
     #music-window {
         display: flex;
-        background: #c0c0c0;
         right: 32px;
         bottom: 24px;
         width: 420px;
@@ -251,8 +250,8 @@ footer > a:hover {
 
     #music-window #applemusic {
         display: block;
-        filter: brightness(1.028);
-        mix-blend-mode: multiply;
+        filter: brightness(0.774);
+        opacity: 0.85;
         border: none;
         border-radius: 0;
     }
