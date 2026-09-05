@@ -209,7 +209,8 @@ window.addEventListener("blur", function () {
 
 function matchLayout() {
     windows.forEach(function (managed) {
-        managed.maximize.disabled = !desktop.matches;
+        managed.maximize.disabled =
+            !desktop.matches || managed.element.id !== "main-window";
         if (!desktop.matches) {
             managed.reset();
         }

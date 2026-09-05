@@ -226,7 +226,7 @@ footer > a:hover {
         max-height: 100%;
     }
 
-    #catclock-window {
+    #catclock-window:not([hidden]) {
         display: flex;
         left: 32px;
         top: 24px;
@@ -251,7 +251,7 @@ footer > a:hover {
         z-index: 2;
     }
 
-    #music-window {
+    #music-window:not([hidden]) {
         display: flex;
         right: 32px;
         bottom: 24px;
