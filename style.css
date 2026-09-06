@@ -72,6 +72,10 @@ body {
     max-height: none;
 }
 
+.title-bar {
+    background: linear-gradient(90deg, #a32c56, #e9658b);
+}
+
 .window.minimized .window-body {
     display: none;
 }
