@@ -20,7 +20,6 @@
                 return el;
             };
         </script>
-        <script src="https://js-cdn.music.apple.com/musickit/v3/musickit.js" data-web-components async></script>
     </head>
     <body>
         <div id="screen">
@@ -136,7 +135,7 @@
                 <div class="window-body"></div>
             </div>
 
-            <div class="window" id="catclock-window">
+            <div class="window" id="catclock-window" hidden>
                 <div class="title-bar">
                     <div class="title-bar-text">catclock</div>
                     <div class="title-bar-controls">
@@ -173,6 +172,18 @@
                     </svg>
                 </span>
                 <span class="icon-label">friends.txt</span>
+            </button>
+            <button class="icon app" data-opens="catclock-window">
+                <span class="icon-image">
+                    <img src="catclock-icon.png" alt="" draggable="false" />
+                </span>
+                <span class="icon-label">catclock</span>
+            </button>
+            <button class="icon app" data-launch="webamp">
+                <span class="icon-image">
+                    <img src="webamp-icon.png" alt="" draggable="false" />
+                </span>
+                <span class="icon-label">webamp</span>
             </button>
         </div>
 

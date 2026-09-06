@@ -23,6 +23,8 @@
 
     var canvas = document.getElementById("catclock");
     if (!canvas) return;
+    var win = document.getElementById("catclock-window");
+    var timer = 0;
 
     canvas.width = CATWID;
     canvas.height = CATHGT;
@@ -158,10 +160,27 @@
         }
     }
 
+    function sync() {
+        var up = !win || !win.hidden;
+        if (up && !timer && loaded === 2) {
+            drawclock();
+            timer = setInterval(drawclock, UPDATE);
+        } else if (!up && timer) {
+            clearInterval(timer);
+            timer = 0;
+        }
+    }
+
     function start() {
-        if (++loaded < 2) return;
-        drawclock();
-        setInterval(drawclock, UPDATE);
+        loaded++;
+        sync();
+    }
+
+    if (win) {
+        new MutationObserver(sync).observe(win, {
+            attributes: true,
+            attributeFilter: ["hidden"]
+        });
     }
 
     body.onload = start;

@@ -74,6 +74,7 @@ body {
 
 #screen > .window > .title-bar {
     background: linear-gradient(90deg, #a32c56, #e9658b);
+    touch-action: none;
 }
 
 #screen > .window.minimized .window-body {
@@ -88,11 +89,87 @@ body {
     display: contents;
 }
 
-#catclock-window,
-#testimonials-window,
-#friends-window,
 #icons {
+    display: flex;
+    position: fixed;
+    top: 56px;
+    left: 12px;
+    gap: 4px;
+    padding: 4px;
+}
+
+#icons .icon:not(.app) {
     display: none;
+}
+
+#screen > #catclock-window:not([hidden]) {
+    position: fixed;
+    top: 96px;
+    left: 12px;
+    width: auto;
+    height: auto;
+}
+
+.icon {
+    background: none;
+    box-shadow: none;
+    min-width: 0;
+    min-height: 0;
+    padding: 2px;
+    width: 84px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    color: var(--desktop-ink);
+    text-shadow: none;
+}
+
+.icon.dropped {
+    position: fixed;
+}
+
+#icons .icon:active {
+    box-shadow: none;
+    text-shadow: none;
+}
+
+#icons .icon:focus {
+    outline: none;
+}
+
+.icon:focus-visible .icon-label {
+    outline: 1px dotted var(--desktop-ink);
+}
+
+.icon-image {
+    position: relative;
+    line-height: 0;
+}
+
+.icon-image img {
+    width: auto;
+    height: 32px;
+    image-rendering: pixelated;
+}
+
+.icon.selected .icon-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #000080;
+    opacity: 0.5;
+}
+
+.icon-label {
+    padding: 0 1px;
+    line-height: 1.2;
+}
+
+.icon.selected .icon-label {
+    background: #000080;
+    color: #fff;
+    outline: 1px dotted #fff;
 }
 
 .resizer {
@@ -251,68 +328,16 @@ footer > a:hover {
     }
 
     #icons {
-        display: flex;
-        position: fixed;
-        top: 12px;
+        left: auto;
         right: 80px;
-        gap: 4px;
-        padding: 4px;
     }
 
-    .icon {
-        background: none;
-        box-shadow: none;
-        min-width: 0;
-        min-height: 0;
-        padding: 2px;
-        width: 84px;
+    #icons .icon:not(.app) {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2px;
-        color: var(--desktop-ink);
-        text-shadow: none;
     }
 
-    .icon.dropped {
-        position: fixed;
-    }
-
-    #icons .icon:active {
-        box-shadow: none;
-        text-shadow: none;
-    }
-
-    #icons .icon:focus {
-        outline: none;
-    }
-
-    .icon:focus-visible .icon-label {
-        outline: 1px dotted var(--desktop-ink);
-    }
-
-    .icon-image {
-        position: relative;
-        line-height: 0;
-    }
-
-    .icon.selected .icon-image::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: #000080;
-        opacity: 0.5;
-    }
-
-    .icon-label {
-        padding: 0 1px;
-        line-height: 1.2;
-    }
-
-    .icon.selected .icon-label {
-        background: #000080;
-        color: #fff;
-        outline: 1px dotted #fff;
+    #icons .icon.app {
+        display: none;
     }
 
     #testimonials-window:not([hidden]),
@@ -336,7 +361,7 @@ footer > a:hover {
         top: 200px;
     }
 
-    #kfarwell-window {
+    #screen > #kfarwell-window {
         left: 92px;
         top: 92px;
         max-height: 75vh;
@@ -368,7 +393,7 @@ footer > a:hover {
 }
 
 @media (min-width: 1320px) {
-    #kfarwell-window {
+    #screen > #kfarwell-window {
         left: 220px;
         top: 24px;
     }

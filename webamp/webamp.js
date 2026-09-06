@@ -74,6 +74,11 @@ function parsePlaylistId(input) {
 
 async function musicKitReady() {
   if (window.MusicKit != null) return;
+  const script = document.createElement("script");
+  script.src = "https://js-cdn.music.apple.com/musickit/v3/musickit.js";
+  script.dataset.webComponents = "";
+  script.async = true;
+  document.head.appendChild(script);
   await new Promise((resolve) =>
     document.addEventListener("musickitloaded", resolve, { once: true })
   );
@@ -348,8 +353,6 @@ async function main() {
   });
   await webamp.renderInto(appEl);
 
-  // Webamp treats windowLayout positions as relative and centres the
-  // group in its container; absolute ones are left where they are put.
   webamp.store.dispatch({
     type: "UPDATE_WINDOW_POSITIONS",
     positions: {
@@ -396,8 +399,14 @@ async function main() {
   });
 }
 
-if (desktop.matches) {
+function launch() {
   main().catch((err) => {
     setError(err.message ?? String(err));
   });
+}
+
+if (desktop.matches) {
+  launch();
+} else {
+  document.addEventListener("launch:webamp", launch, { once: true });
 }

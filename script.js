@@ -14,6 +14,9 @@ var music = document.getElementById("music");
 var testimonials = document.getElementById("testimonials");
 var friends = document.getElementById("friends");
 var webampHost = document.getElementById("webamp-host");
+var catclockWindow = document.getElementById("catclock-window");
+var kfarwellWindow = document.getElementById("kfarwell-window");
+var iconArea = document.getElementById("icons");
 var files = [
     {section: testimonials, window: document.getElementById("testimonials-window")},
     {section: friends, window: document.getElementById("friends-window")}
@@ -127,7 +130,8 @@ function manage(win) {
     });
 
     titleBar.addEventListener("pointerdown", function (event) {
-        if (!desktop.matches || maximized) return;
+        var movable = desktop.matches || win.id !== "kfarwell-window";
+        if (!movable || maximized) return;
         if (event.target.closest(".title-bar-controls")) return;
 
         var start = measure();
@@ -261,11 +265,18 @@ document.querySelectorAll(".icon").forEach(function (icon) {
     var win = document.getElementById(icon.dataset.opens);
 
     function open() {
+        if (icon.dataset.launch) {
+            document.dispatchEvent(new CustomEvent("launch:" + icon.dataset.launch));
+            return;
+        }
         win.hidden = false;
         win.style.zIndex = ++frontmost;
     }
 
     icon.addEventListener("dblclick", open);
+    icon.addEventListener("click", function () {
+        if (!desktop.matches) open();
+    });
     icon.addEventListener("keydown", function (event) {
         if (event.key === "Enter") open();
     });
@@ -319,6 +330,17 @@ document.querySelectorAll(".icon").forEach(function (icon) {
     });
 });
 
+function updateIcons() {
+    var bare = kfarwellWindow.hidden
+        || kfarwellWindow.classList.contains("minimized");
+    iconArea.style.display = (desktop.matches || bare) ? "" : "none";
+}
+
+new MutationObserver(updateIcons).observe(kfarwellWindow, {
+    attributes: true,
+    attributeFilter: ["class", "hidden"]
+});
+
 function matchLayout() {
     windows.forEach(function (managed) {
         managed.maximize.disabled =
@@ -327,6 +349,9 @@ function matchLayout() {
             managed.reset();
         }
     });
+
+    catclockWindow.hidden = !desktop.matches;
+    updateIcons();
 
     if (desktop.matches) {
         files.forEach(function (file) {
