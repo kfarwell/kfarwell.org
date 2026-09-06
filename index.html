@@ -9,10 +9,22 @@
         <link rel="stylesheet" href="98.css">
         <link rel="stylesheet" href="toasters.css">
         <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="webamp/webamp.css">
+        <script>
+            const createElement = Document.prototype.createElement;
+            Document.prototype.createElement = function (tag, ...rest) {
+                const el = createElement.call(this, tag, ...rest);
+                if (String(tag).toLowerCase() === "audio") {
+                    el.crossOrigin = "anonymous";
+                }
+                return el;
+            };
+        </script>
+        <script src="https://js-cdn.music.apple.com/musickit/v3/musickit.js" data-web-components async></script>
     </head>
     <body>
         <div id="screen">
-            <div class="window" id="main-window">
+            <div class="window" id="kfarwell-window">
                 <div class="title-bar">
                     <div class="title-bar-text">kfarwell.org</div>
                     <div class="title-bar-controls">
@@ -138,17 +150,7 @@
                 </div>
             </div>
 
-            <div class="window" id="music-window">
-                <div class="title-bar">
-                    <div class="title-bar-text">Apple Music</div>
-                    <div class="title-bar-controls">
-                        <button aria-label="Minimize"></button>
-                        <button aria-label="Maximize"></button>
-                        <button aria-label="Close"></button>
-                    </div>
-                </div>
-                <div class="window-body"></div>
-            </div>
+            <div id="webamp-host"></div>
         </div>
 
         <div id="icons">
@@ -259,5 +261,6 @@
 
         <script src="script.js"></script>
         <script src="catclock.js"></script>
+        <script type="module" src="webamp/webamp.js"></script>
     </body>
 </html>

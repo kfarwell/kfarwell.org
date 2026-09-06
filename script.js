@@ -13,7 +13,7 @@ var toggle = document.getElementById("toggle");
 var music = document.getElementById("music");
 var testimonials = document.getElementById("testimonials");
 var friends = document.getElementById("friends");
-var musicBody = document.querySelector("#music-window .window-body");
+var webampHost = document.getElementById("webamp-host");
 var files = [
     {section: testimonials, window: document.getElementById("testimonials-window")},
     {section: friends, window: document.getElementById("friends-window")}
@@ -203,7 +203,7 @@ function manage(win) {
     return {element: win, maximize: maximize, reset: unplace};
 }
 
-var windows = [].map.call(document.querySelectorAll(".window"), manage);
+var windows = [].map.call(document.querySelectorAll("#screen > .window"), manage);
 
 window.addEventListener("blur", function () {
     var focused = document.activeElement;
@@ -211,6 +211,10 @@ window.addEventListener("blur", function () {
         focused.closest(".window").style.zIndex = ++frontmost;
     }
 });
+
+webampHost.addEventListener("pointerdown", function () {
+    webampHost.style.zIndex = ++frontmost;
+}, true);
 
 document.addEventListener("click", function (event) {
     var icon = event.target.closest(".icon");
@@ -318,14 +322,13 @@ document.querySelectorAll(".icon").forEach(function (icon) {
 function matchLayout() {
     windows.forEach(function (managed) {
         managed.maximize.disabled =
-            !desktop.matches || managed.element.id !== "main-window";
+            !desktop.matches || managed.element.id !== "kfarwell-window";
         if (!desktop.matches) {
             managed.reset();
         }
     });
 
     if (desktop.matches) {
-        musicBody.appendChild(music);
         files.forEach(function (file) {
             file.window.querySelector(".window-body").appendChild(file.section);
         });
@@ -338,7 +341,6 @@ function matchLayout() {
             icon.classList.remove("dropped");
             icon.removeAttribute("style");
         });
-        theEnd.parentNode.insertBefore(music, theEnd);
         music.parentNode.insertBefore(testimonials, music);
         music.parentNode.insertBefore(friends, music);
         footerBreak.parentNode.insertBefore(dock, footerBreak);

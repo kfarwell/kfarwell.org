@@ -31,7 +31,7 @@ body {
     font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", serif;
 }
 
-.window {
+#screen > .window {
     background: var(--window);
     box-sizing: border-box;
     position: relative;
@@ -65,26 +65,22 @@ body {
     flex: none;
 }
 
-.window.placed {
+#screen > .window.placed {
     position: fixed;
     margin: 0;
     max-width: none;
     max-height: none;
 }
 
-.title-bar {
+#screen > .window > .title-bar {
     background: linear-gradient(90deg, #a32c56, #e9658b);
 }
 
-.window.minimized .window-body {
+#screen > .window.minimized .window-body {
     display: none;
 }
 
-.window[hidden] {
-    display: none;
-}
-
-#music-window {
+#screen > .window[hidden] {
     display: none;
 }
 
@@ -233,7 +229,7 @@ footer > a:hover {
         height: 100%;
     }
 
-    .window {
+    #screen > .window {
         position: absolute;
         height: auto;
         max-height: 100%;
@@ -340,7 +336,7 @@ footer > a:hover {
         top: 200px;
     }
 
-    #main-window {
+    #kfarwell-window {
         left: 92px;
         top: 92px;
         max-height: 75vh;
@@ -349,29 +345,12 @@ footer > a:hover {
         z-index: 2;
     }
 
-    #music-window:not([hidden]) {
-        display: flex;
-        right: 32px;
-        bottom: 24px;
-        width: 420px;
-        max-width: calc(100vw - 64px);
-        z-index: 1;
-    }
-
-    #music-window h2 {
+    #music {
         display: none;
     }
 
-    #music-window .window-body {
-        padding: 0;
-    }
-
-    #music-window #applemusic {
-        display: block;
-        filter: brightness(0.774);
-        opacity: 0.85;
-        border: none;
-        border-radius: 0;
+    #webamp-host {
+        z-index: 1;
     }
 
     #buttons {
@@ -383,13 +362,13 @@ footer > a:hover {
         align-content: flex-end;
     }
 
-    .window .resizer {
+    #screen > .window .resizer {
         display: block;
     }
 }
 
 @media (min-width: 1320px) {
-    #main-window {
+    #kfarwell-window {
         left: 220px;
         top: 24px;
     }

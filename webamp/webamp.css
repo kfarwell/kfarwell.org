@@ -1,0 +1,62 @@
+#webamp-host {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+#webamp .window {
+    background: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+#webamp-host #webamp > * {
+    pointer-events: auto;
+}
+
+#webamp #am-body {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 5px;
+    background: #000;
+}
+
+#webamp #am-playlist {
+    flex: 1;
+    min-width: 0;
+    height: 13px;
+    padding: 0 3px;
+    border: 1px solid;
+    border-color: #101010 #4a4a6e #4a4a6e #101010;
+    font-size: 9px;
+    line-height: 13px;
+}
+
+#webamp #am-playlist.error {
+    color: #ff0000;
+}
+
+#webamp #am-auth {
+    flex: none;
+    display: flex;
+    align-items: center;
+    padding: 3px 6px;
+    background: var(--button-face, #bdced6);
+    border: 1px solid;
+    border-color: var(--button-light, #adb5c6) var(--button-dark, #26253b)
+        var(--button-dark, #26253b) var(--button-light, #adb5c6);
+    box-shadow: inset 1px 1px 0 var(--button-highlight, #efffff);
+    cursor: pointer;
+}
+
+#webamp #am-auth.winamp-active {
+    border-color: var(--button-dark, #26253b) var(--button-light, #adb5c6)
+        var(--button-light, #adb5c6) var(--button-dark, #26253b);
+    box-shadow: inset -1px -1px 0 var(--button-highlight, #efffff);
+}
