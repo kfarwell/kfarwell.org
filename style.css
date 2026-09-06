@@ -209,6 +209,10 @@ footer > a:hover {
         height: 48px;
     }
 
+    #tamanotchi img {
+        transform: scaleX(-1);
+    }
+
     #dock #toggle {
         border: none;
         box-shadow: none;
