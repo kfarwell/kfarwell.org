@@ -48,35 +48,39 @@
                     <li><strong>x:</strong> <a href="https://x.com/notkfarwell" target="_blank">notkfarwell</a></li>
                 </ul>
 
-                <h2>testimonials</h2>
-                <ul>
-                    <li>"TECH GENIS" -Algoma University</li>
-                    <li>"you're well on your way to becoming a super user" -Keefer</li>
-                    <li>"kfarwell is the best dev ever" -Kritaka</li>
-                    <li>"kyle has anyone ever told you play a decisive role in the global configuration file /etc" -Markov chain</li>
-                    <li>"u want me to pay u for 99$ for premium of this SKid line of code?" -Simon</li>
-                    <li>"Kyle Farewell" -The Press</li>
-                </ul>
+                <div id="testimonials">
+                    <h2>testimonials</h2>
+                    <ul>
+                        <li>"TECH GENIS" -Algoma University</li>
+                        <li>"you're well on your way to becoming a super user" -Keefer</li>
+                        <li>"kfarwell is the best dev ever" -Kritaka</li>
+                        <li>"kyle has anyone ever told you play a decisive role in the global configuration file /etc" -Markov chain</li>
+                        <li>"u want me to pay u for 99$ for premium of this SKid line of code?" -Simon</li>
+                        <li>"Kyle Farewell" -The Press</li>
+                    </ul>
+                </div>
 
-                <h2>friends</h2>
-                <p>some cool people you should go admire or hire or star on github or something</p>
-                <ul style="column-width: 8em">
-                    <li><a href="https://alicedaltonsound.neocities.org" target="_blank">Alice&nbsp;Dalton</a></li>
-                    <li><a href="https://x.com/existony" target="_blank">Anthony&nbsp;Tan</a></li>
-                    <li><a href="https://ariesclark.com/" target="_blank">Aries&nbsp;Clark</a></li>
-                    <li><a href="https://www.twitch.tv/fuughoul" target="_blank">FuuGhoul</a>&nbsp;&lt;3</li>
-                    <li><a href="https://www.twitch.tv/gelatosquid" target="_blank">GelatoSquid</a></li>
-                    <li><a href="https://jaredkelly.ca/" target="_blank">Jared&nbsp;Kelly</a></li>
-                    <li><a href="https://x.com/KRastyr" target="_blank">Katten</a></li>
-                    <li><a href="https://krourke.org/" target="_blank">Keefer&nbsp;Rourke</a></li>
-                    <li><a href="https://sillylaird.ca/" target="_blank">Laird&nbsp;Lonergan</a></li>
-                    <li><a href="https://www.twitch.tv/loveallama" target="_blank">loveallama</a></li>
-                    <li><a href="https://github.com/fire219" target="_blank">Matthew&nbsp;Petry</a></li>
-                    <li><a href="https://www.linkedin.com/in/matthew-rose-5bb819128/" target="_blank">Matthew&nbsp;Rose</a></li>
-                    <li><a href="https://x.com/signseivr" target="_blank">Signsei</a></li>
-                    <li><a href="https://www.twitch.tv/zombi3doll" target="_blank">Zombi3Doll</a></li>
-                    <li><a href="https://flirtual.com/about" target="_blank">The&nbsp;Flirtual&nbsp;Team</a></li>
-                </ul>
+                <div id="friends">
+                    <h2>friends</h2>
+                    <p>some cool people you should go admire or hire or star on github or something</p>
+                    <ul style="column-width: 8em">
+                        <li><a href="https://alicedaltonsound.neocities.org" target="_blank">Alice&nbsp;Dalton</a></li>
+                        <li><a href="https://x.com/existony" target="_blank">Anthony&nbsp;Tan</a></li>
+                        <li><a href="https://ariesclark.com/" target="_blank">Aries&nbsp;Clark</a></li>
+                        <li><a href="https://www.twitch.tv/fuughoul" target="_blank">FuuGhoul</a>&nbsp;&lt;3</li>
+                        <li><a href="https://www.twitch.tv/gelatosquid" target="_blank">GelatoSquid</a></li>
+                        <li><a href="https://jaredkelly.ca/" target="_blank">Jared&nbsp;Kelly</a></li>
+                        <li><a href="https://x.com/KRastyr" target="_blank">Katten</a></li>
+                        <li><a href="https://krourke.org/" target="_blank">Keefer&nbsp;Rourke</a></li>
+                        <li><a href="https://sillylaird.ca/" target="_blank">Laird&nbsp;Lonergan</a></li>
+                        <li><a href="https://www.twitch.tv/loveallama" target="_blank">loveallama</a></li>
+                        <li><a href="https://github.com/fire219" target="_blank">Matthew&nbsp;Petry</a></li>
+                        <li><a href="https://www.linkedin.com/in/matthew-rose-5bb819128/" target="_blank">Matthew&nbsp;Rose</a></li>
+                        <li><a href="https://x.com/signseivr" target="_blank">Signsei</a></li>
+                        <li><a href="https://www.twitch.tv/zombi3doll" target="_blank">Zombi3Doll</a></li>
+                        <li><a href="https://flirtual.com/about" target="_blank">The&nbsp;Flirtual&nbsp;Team</a></li>
+                    </ul>
+                </div>
 
                 <div id="music">
                     <h2>music</h2>
@@ -94,6 +98,30 @@
                     <button id="toggle" onclick="toggleMode()">🌚</button>
                 </footer>
                 </div>
+            </div>
+
+            <div class="window" id="testimonials-window" hidden>
+                <div class="title-bar">
+                    <div class="title-bar-text">testimonials.txt</div>
+                    <div class="title-bar-controls">
+                        <button aria-label="Minimize"></button>
+                        <button aria-label="Maximize"></button>
+                        <button aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="window-body"></div>
+            </div>
+
+            <div class="window" id="friends-window" hidden>
+                <div class="title-bar">
+                    <div class="title-bar-text">friends.txt</div>
+                    <div class="title-bar-controls">
+                        <button aria-label="Minimize"></button>
+                        <button aria-label="Maximize"></button>
+                        <button aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="window-body"></div>
             </div>
 
             <div class="window" id="catclock-window">
@@ -121,6 +149,29 @@
                 </div>
                 <div class="window-body"></div>
             </div>
+        </div>
+
+        <div id="icons">
+            <button class="icon" data-opens="testimonials-window">
+                <span class="icon-image">
+                    <svg width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges" aria-hidden="true">
+                        <path d="M6 3h13l7 7v19H6z" fill="#fff" stroke="#000" />
+                        <path d="M19 3v7h7" fill="#c0c0c0" stroke="#000" />
+                        <path d="M9 14h14M9 17h14M9 20h14M9 23h9" stroke="#808080" />
+                    </svg>
+                </span>
+                <span class="icon-label">testimonials.txt</span>
+            </button>
+            <button class="icon" data-opens="friends-window">
+                <span class="icon-image">
+                    <svg width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges" aria-hidden="true">
+                        <path d="M6 3h13l7 7v19H6z" fill="#fff" stroke="#000" />
+                        <path d="M19 3v7h7" fill="#c0c0c0" stroke="#000" />
+                        <path d="M9 14h14M9 17h14M9 20h14M9 23h9" stroke="#808080" />
+                    </svg>
+                </span>
+                <span class="icon-label">friends.txt</span>
+            </button>
         </div>
 
         <div id="dock"></div>

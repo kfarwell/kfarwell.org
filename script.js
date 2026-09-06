@@ -11,7 +11,13 @@ var footerBreak = document.getElementById("footer-break");
 var dockTiles = document.getElementById("dock");
 var toggle = document.getElementById("toggle");
 var music = document.getElementById("music");
+var testimonials = document.getElementById("testimonials");
+var friends = document.getElementById("friends");
 var musicBody = document.querySelector("#music-window .window-body");
+var files = [
+    {section: testimonials, window: document.getElementById("testimonials-window")},
+    {section: friends, window: document.getElementById("friends-window")}
+];
 var theEnd = document.getElementById("the-end");
 
 var minWidth = 240;
@@ -129,7 +135,6 @@ function manage(win) {
         drag(event, function (dx, dy) {
             var height = minimized ? titleBar.offsetHeight : start.height;
             place({
-                /* Keep enough of the title bar on screen to grab. */
                 left: Math.min(
                     Math.max(dx + start.left, 80 - start.width),
                     window.innerWidth - 80
@@ -207,6 +212,109 @@ window.addEventListener("blur", function () {
     }
 });
 
+document.addEventListener("click", function (event) {
+    var icon = event.target.closest(".icon");
+
+    document.querySelectorAll(".icon").forEach(function (other) {
+        other.classList.toggle("selected", other === icon);
+    });
+});
+
+var gridX = 88;
+var gridY = 64;
+var gridOrigin = null;
+
+function grid() {
+    if (!gridOrigin) {
+        var box = document.querySelector(".icon").getBoundingClientRect();
+        gridOrigin = {x: box.left, y: box.top};
+    }
+    return gridOrigin;
+}
+
+function snap(value, origin, step, limit) {
+    var snapped = origin + Math.round((value - origin) / step) * step;
+
+    if (limit < step) return Math.min(Math.max(value, 0), limit);
+    while (snapped > limit) snapped -= step;
+    while (snapped < 0) snapped += step;
+    return snapped;
+}
+
+function dropIcons() {
+    grid();
+    document.querySelectorAll(".icon").forEach(function (icon) {
+        if (icon.classList.contains("dropped")) return;
+
+        var box = icon.getBoundingClientRect();
+        icon.style.left = box.left + "px";
+        icon.style.top = box.top + "px";
+        icon.classList.add("dropped");
+    });
+}
+
+document.querySelectorAll(".icon").forEach(function (icon) {
+    var win = document.getElementById(icon.dataset.opens);
+
+    function open() {
+        win.hidden = false;
+        win.style.zIndex = ++frontmost;
+    }
+
+    icon.addEventListener("dblclick", open);
+    icon.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") open();
+    });
+
+    icon.addEventListener("pointerdown", function (event) {
+        if (!desktop.matches || event.button !== 0) return;
+
+        var startX = event.clientX;
+        var startY = event.clientY;
+        var origin = null;
+
+        function move(moveEvent) {
+            var dx = moveEvent.clientX - startX;
+            var dy = moveEvent.clientY - startY;
+
+            if (!origin) {
+                if (Math.abs(dx) + Math.abs(dy) < 4) return;
+                dropIcons();
+                origin = {
+                    left: parseFloat(icon.style.left),
+                    top: parseFloat(icon.style.top)
+                };
+                icon.setPointerCapture(moveEvent.pointerId);
+            }
+
+            icon.style.left = Math.min(
+                Math.max(origin.left + dx, 0),
+                window.innerWidth - icon.offsetWidth
+            ) + "px";
+            icon.style.top = Math.min(
+                Math.max(origin.top + dy, 0),
+                window.innerHeight - icon.offsetHeight
+            ) + "px";
+        }
+
+        function stop() {
+            window.removeEventListener("pointermove", move);
+            window.removeEventListener("pointerup", stop);
+            window.removeEventListener("pointercancel", stop);
+
+            if (!origin) return;
+            icon.style.left = snap(parseFloat(icon.style.left), grid().x,
+                gridX, window.innerWidth - icon.offsetWidth) + "px";
+            icon.style.top = snap(parseFloat(icon.style.top), grid().y,
+                gridY, window.innerHeight - icon.offsetHeight) + "px";
+        }
+
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", stop);
+        window.addEventListener("pointercancel", stop);
+    });
+});
+
 function matchLayout() {
     windows.forEach(function (managed) {
         managed.maximize.disabled =
@@ -218,11 +326,21 @@ function matchLayout() {
 
     if (desktop.matches) {
         musicBody.appendChild(music);
+        files.forEach(function (file) {
+            file.window.querySelector(".window-body").appendChild(file.section);
+        });
         dockTiles.appendChild(toggle);
         dockTiles.appendChild(dock);
         document.body.insertBefore(buttons, toasters);
     } else {
+        gridOrigin = null;
+        document.querySelectorAll(".icon.dropped").forEach(function (icon) {
+            icon.classList.remove("dropped");
+            icon.removeAttribute("style");
+        });
         theEnd.parentNode.insertBefore(music, theEnd);
+        music.parentNode.insertBefore(testimonials, music);
+        music.parentNode.insertBefore(friends, music);
         footerBreak.parentNode.insertBefore(dock, footerBreak);
         footerBreak.parentNode.insertBefore(buttons, footerBreak);
     }

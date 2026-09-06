@@ -1,10 +1,12 @@
 :root {
     --background: #000;
+    --desktop-ink: #fff;
     --window: rgba(255, 255, 255, 0.75);
 }
 
 :root.light {
     --background: #fff;
+    --desktop-ink: #111;
     --window: rgba(171, 171, 171, 0.75);
 }
 
@@ -86,7 +88,10 @@ body {
     display: contents;
 }
 
-#catclock-window {
+#catclock-window,
+#testimonials-window,
+#friends-window,
+#icons {
     display: none;
 }
 
@@ -233,7 +238,6 @@ footer > a:hover {
         width: auto;
     }
 
-    /* The cat is the window's whole content. */
     #catclock-window .window-body {
         padding: 0;
     }
@@ -242,10 +246,96 @@ footer > a:hover {
         display: block;
     }
 
+    #icons {
+        display: flex;
+        position: fixed;
+        top: 12px;
+        right: 80px;
+        gap: 4px;
+        padding: 4px;
+    }
+
+    .icon {
+        background: none;
+        box-shadow: none;
+        min-width: 0;
+        min-height: 0;
+        padding: 2px;
+        width: 84px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        color: var(--desktop-ink);
+        text-shadow: none;
+    }
+
+    .icon.dropped {
+        position: fixed;
+    }
+
+    #icons .icon:active {
+        box-shadow: none;
+        text-shadow: none;
+    }
+
+    #icons .icon:focus {
+        outline: none;
+    }
+
+    .icon:focus-visible .icon-label {
+        outline: 1px dotted var(--desktop-ink);
+    }
+
+    .icon-image {
+        position: relative;
+        line-height: 0;
+    }
+
+    .icon.selected .icon-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #000080;
+        opacity: 0.5;
+    }
+
+    .icon-label {
+        padding: 0 1px;
+        line-height: 1.2;
+    }
+
+    .icon.selected .icon-label {
+        background: #000080;
+        color: #fff;
+        outline: 1px dotted #fff;
+    }
+
+    #testimonials-window:not([hidden]),
+    #friends-window:not([hidden]) {
+        display: flex;
+        width: 420px;
+    }
+
+    #testimonials-window h2,
+    #friends-window h2 {
+        margin-top: 0;
+    }
+
+    #testimonials-window {
+        left: 300px;
+        top: 140px;
+    }
+
+    #friends-window {
+        left: 360px;
+        top: 200px;
+    }
+
     #main-window {
         left: 92px;
         top: 92px;
-        height: 75vh;
+        max-height: 75vh;
         width: 636px;
         max-width: calc(100vw - 64px);
         z-index: 2;
@@ -290,8 +380,6 @@ footer > a:hover {
     }
 }
 
-/* Wide enough to stand the main window beside the cat clock rather
-   than over it. */
 @media (min-width: 1320px) {
     #main-window {
         left: 220px;
