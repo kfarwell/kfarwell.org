@@ -9,8 +9,10 @@
  * She stands on the row of 88x31 badges, or on the top edge of a window she
  * has been dropped onto. When the pointer has been still for a moment she walks
  * towards it until she is under it or has run out of floor, then stands and
- * watches it; left alone for long enough she goes and sits against Winamp. Grab
- * her and she follows the cursor on a spring; let go and she falls.
+ * watches it; left alone for long enough she goes and sits down -- on the ledge
+ * of the window she is stood on, or against Winamp when she is on the page
+ * floor. Grab her and she follows the cursor on a spring; let go and she
+ * falls.
  *
  * One Karin per device, not per window: the windows elect an owner over a
  * BroadcastChannel, and she is handed between them in mid-air.
@@ -34,13 +36,17 @@
     var SIT_CROUCH = 0.35;      /* where the crouch key sits along that blend */
     var SIT_TUCK = 0.72;        /* ...and where she is down with her knees up */
     var SIT_REACH = 0.87;       /* ...and where her knees have straightened out */
-    var SIT_YAW = -68;          /* turned side-on, back to the window */
+    var SIT_YAW = -68;          /* turned side-on, back to the window; negated
+                                   for the right-hand ledge, which mirrors her */
     var SIT_OFFSET = 288;       /* ...and how far left of it she sits. A fixed
                                    px offset, not her measured width, which
                                    changes between standing and sitting and
                                    would move the spot out from under her */
     var SIT_BACK = 0.25;        /* a window has to reach this much of her height
                                    above the floor to be worth leaning on */
+    var LEDGE_ROOM = 96;        /* a window has to stand this far clear of the
+                                   left edge of the screen before she will hang
+                                   her legs over that side of it */
 
     var IDLE_DELAY = 2000;      /* pointer must be still this long before she sets off */
     var WAKE_DELAY = 2000;      /* she ignores the pointer for this long after loading */
@@ -134,6 +140,11 @@
     var LEG_BONES = ["LeftUpperLeg", "LeftLowerLeg", "RightUpperLeg", "RightLowerLeg"];
     var sitT = 1;               /* 1 sitting, 0 standing, in between mid-animation */
     var sitting = true;         /* what she is heading towards */
+    /* Which ledge she is sat on: 1 the left-hand edge of the window under her,
+       -1 the right, 0 none at all -- she is on the page floor, and goes and
+       sits against Winamp instead. Picked on the way over and then latched, so
+       a window dragged about under her does not slide her end to end. */
+    var sitSide = 0;
     var everMoved = false;      /* has the pointer moved since the page loaded */
     var dazeT = 0;              /* 1 at the moment she lands, 0 as it wears off */
     var held = 0;               /* pointerId, REMOTE, or 0 */
@@ -228,11 +239,30 @@
         return true;
     }
 
-    /* Her spot on the floor with her back to Winamp. With no wall to lean on --
-       it has not loaded yet, or it is held too high, crowded up against the
-       left edge, or pulled apart -- she leans on the right-hand edge of the
-       screen instead. */
+    /* Which end of the window she is stood on she would sit on, if she sat
+       down now. The left ledge by preference; her legs hang over the outside of
+       it, so a window crowded up against the left edge of the screen -- or run
+       off it altogether -- leaves them nowhere to hang, and she takes the right
+       ledge and sits the other way round instead. */
+    function ledgeSide() {
+        if (!platform) return 0;
+        var r = platform.getBoundingClientRect();
+        if (!r.width || !r.height) return 0;
+        return r.left >= LEDGE_ROOM ? 1 : -1;
+    }
+
+    /* Her spot to sit. On a window that is the ledge she picked: her seat on
+       the end of it and her knees at the edge, which minX()/maxX() already
+       measure, since they bound her silhouette to the window she is on.
+
+       On the page floor it is the spot with her back to Winamp. With no wall to
+       lean on -- it has not loaded yet, or it is held too high, crowded up
+       against the left edge, or pulled apart -- she leans on the right-hand
+       edge of the screen instead. */
     function sitX() {
+        if (sitSide > 0) return minX();
+        if (sitSide < 0) return maxX();
+
         var rects = winampRects();
         var backAt = window.innerWidth;
 
@@ -363,7 +393,8 @@
     var restL = 0;              /* ...as they are when she is stood up straight */
     var restR = 0;
     var haveWidth = false;
-    var widthPosture = -1;      /* she is a different width sitting than stood */
+    var widthPosture = "";      /* she is a different width sitting than stood,
+                                   and different again on each ledge */
     var frames = 0;
 
     /* The skirt is a set of spring-bone chains. Swinging her about drives them
@@ -621,7 +652,7 @@
         av.resize();
         frameCamera();
         haveWidth = false;
-        widthPosture = -1;
+        widthPosture = "";
         av.camera.updateMatrixWorld();
         var feet = new THREE.Vector3(0, av.center.y - av.height / 2, 0);
         feet.project(av.camera);
@@ -716,10 +747,10 @@
     var GRIP = [34, 62, 68, 68, 62];    /* holding on */
     var FLAT = [12, 8, 6, 7, 10];       /* palm down on the floor */
 
-    /* How far the hands are into their flat, palm-down, pointing-right posture.
-       They hang off the wrist while she is still up on her feet -- held out
-       backwards from a standing arm they read as broken -- and turn out flat
-       over the descent, so they are planted by the time she is down. */
+    /* How far the hands are into their flat, palm-down, pointing-behind-her
+       posture. They hang off the wrist while she is still up on her feet --
+       held out backwards from a standing arm they read as broken -- and turn
+       out flat over the descent, so they are planted by the time she is down. */
     function handT(t) {
         var u = clamp((t - 0.40) / 0.32, 0, 1);
         return u * u * (3 - 2 * u);
@@ -816,7 +847,8 @@
         handY = (1 - (p.y * 0.5 + 0.5)) * BOX_H - GRIP_Y;
     }
 
-    /* Sitting on the floor, legs out in front, leaning back on the window.
+    /* Sitting on the floor, legs out in front, leaning back on the window --
+       or, on a ledge, with her lower legs hanging over the edge of it.
        `t` blends it against however she is stood, so standing up and sitting
        down are the same animation run in opposite directions. */
     function poseSit(t) {
@@ -858,10 +890,17 @@
            doing both at once swings her ankles down through it. */
         aim("LeftUpperLeg", [via(0.06, 0.09, 0.10, 0.10, 0.10) * s, via(-1, -0.84, 0.85, 0.78, 0.07), via(0, 0.54, 0.53, 0.63, 0.99)], yaw);
         /* Shins: tucked back under the knee until she is down, then swung out
-           in front -- that is her feet coming in under her, then sliding away */
-        aim("LeftLowerLeg", [via(0.02, 0.04, 0.06, 0.06, 0.06) * s, via(-1, -0.97, -0.97, -0.93, -0.12), via(0, -0.24, 0.24, 0.37, 0.99)], yaw);
+           in front -- that is her feet coming in under her, then sliding away.
+           Off a ledge there is no floor to slide them along, so only the last
+           key changes: her knees stay bent and her lower legs are left hanging
+           over the edge. Everything up to the tuck is the same move either way,
+           and the seat probe in measureDrop() has taken over from the feet well
+           before then, so hanging them does not drag her down after it. */
+        var shinY = sitSide ? -0.94 : -0.12;
+        var shinZ = sitSide ? 0.30 : 0.99;
+        aim("LeftLowerLeg", [via(0.02, 0.04, 0.06, 0.06, 0.06) * s, via(-1, -0.97, -0.97, -0.93, shinY), via(0, -0.24, 0.24, 0.37, shinZ)], yaw);
         aim("RightUpperLeg", [via(-0.06, -0.09, -0.10, -0.10, -0.10) * s, via(-1, -0.84, 0.85, 0.78, 0.07), via(0, 0.54, 0.53, 0.63, 0.99)], yaw);
-        aim("RightLowerLeg", [via(-0.02, -0.04, -0.06, -0.06, -0.06) * s, via(-1, -0.97, -0.97, -0.93, -0.12), via(0, -0.24, 0.24, 0.37, 0.99)], yaw);
+        aim("RightLowerLeg", [via(-0.02, -0.04, -0.06, -0.06, -0.06) * s, via(-1, -0.97, -0.97, -0.93, shinY), via(0, -0.24, 0.24, 0.37, shinZ)], yaw);
 
         /* Arms: straight down her sides the whole way, reaching for the floor
            beside her. */
@@ -872,8 +911,9 @@
         aim("RightUpperArm", [via(-0.20, -0.26, -0.34, -0.34, -0.34) * s, via(-0.97, -0.96, -0.95, -0.94, -0.93), via(0.10, 0.14, 0.16, 0.12, 0.08)], yaw);
         aim("RightLowerArm", loR, yaw);
 
-        /* Fingers end up flat along the badges, pointing screen-right -- a
-           world direction, not one of hers, so it is set straight rather than
+        /* Fingers end up flat on whatever she is sat on, pointing away behind
+           her -- screen-right, or screen-left on the mirrored right-hand ledge.
+           A world direction, not one of hers, so it is set straight rather than
            through aim(), which turns its argument by her yaw. They start from
            wherever the forearm points rather than from straight down, which
            would cock the wrist back wherever the arm was not vertical.
@@ -881,8 +921,9 @@
         var h = handT(t);
         var fL = turn(loL, yaw);
         var fR = turn(loR, yaw);
+        var back = sitSide < 0 ? -1 : 1;
         function reach(f) {
-            return [f[0] + (1 - f[0]) * h, f[1] * (1 - h), f[2] * (1 - h)];
+            return [f[0] + (back - f[0]) * h, f[1] * (1 - h), f[2] * (1 - h)];
         }
         av.rig.setAim("LeftHand", reach(fL));
         av.rig.setAim("RightHand", reach(fR));
@@ -1060,8 +1101,17 @@
             vy = 0;
             followPlatform();
 
+            /* Which end she is heading for, up until she is actually down on
+               it. Once she is, it is left alone: a window dragged over towards
+               the screen edge under a seated Karin would otherwise flip her end
+               to end. Losing the window out from under her does put her back on
+               the floor, since there is no longer a ledge to be sat on. */
+            if (sitT < 0.99) sitSide = ledgeSide();
+            else if (!platform) sitSide = 0;
+
             /* long enough untouched and she goes to sit against the music
-               window; the moment the pointer stirs, she gets back up */
+               window, or on the ledge of the one she is stood on; the moment
+               the pointer stirs, she gets back up */
             if (everMoved && !sitting && now - ptrStill > SIT_AFTER) sitting = true;
 
             var goal = sitting ? sitX() + BOX_W / 2 : ptrX;
@@ -1142,7 +1192,7 @@
         /* stay turned to the wall until she is actually on her feet, then let
            the yaw easing bring her round -- turning while still on the floor
            looks like she is swivelling on her backside */
-        if (sitT > 0.05) want = SIT_YAW;
+        if (sitT > 0.05) want = SIT_YAW * (sitSide < 0 ? -1 : 1);
         yaw += (want - yaw) * Math.min(1, dt * 6);
         twist += (wantTwist - twist) * Math.min(1, dt * 5);
         return false;
@@ -1160,7 +1210,7 @@
            latched in between. The first measurement happens on frame one, so
            she is placed before she is ever shown, and again a few frames later
            once the viewer has applied her pose over the one it starts in. */
-        var posture = sitT > 0.5 ? 1 : 0;
+        var posture = sitT > 0.5 ? "sit" + sitSide : "stand";
         if (!mirror && (mode === "idle" || mode === "sit")
             && (!haveWidth || widthPosture !== posture || frames === 6)) {
             measureWidth();
@@ -1846,7 +1896,7 @@
             l: spanL, r: spanR,
             mode: mode,
             yaw: yaw, twist: twist, swing: swing, phase: phase,
-            sitT: sitT, grip: grip, airT: airT, daze: dazeT,
+            sitT: sitT, side: sitSide, grip: grip, airT: airT, daze: dazeT,
             arm: limbs.arm.a, legL: limbs.legL.a, legR: limbs.legR.a,
             face: face,
             px: vp.x + ptrX, py: vp.y + ptrY
@@ -1865,6 +1915,7 @@
         swing = pose.swing;
         phase = pose.phase;
         sitT = pose.sitT;
+        sitSide = pose.side;
         grip = pose.grip;
         airT = pose.airT;
         dazeT = pose.daze;
