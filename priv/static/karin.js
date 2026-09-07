@@ -1227,6 +1227,8 @@
     function onPointerMove(e) {
         ptrX = e.clientX;
         ptrY = e.clientY;
+        /* released somewhere we never heard about, off-window or over an iframe */
+        if (held && e.buttons === 0) onRelease(e);
         /* A cursor that happens to be moving as the page comes up should not
            haul her to her feet the instant she appears -- she keeps watching it,
            but stays sat down until it moves again. */
@@ -1285,7 +1287,8 @@
     }
 
     function onRelease(e) {
-        if (!held || (e.pointerId || 1) !== held) return;
+        if (!held) return;
+        if (e && e.pointerId && e.pointerId !== held) return;
         document.body.style.userSelect = "";
         held = 0;
         mode = "fall";
@@ -1361,8 +1364,11 @@
 
             openMenuAt(x, y);
         });
-        hit.addEventListener("pointerup", onRelease);
-        hit.addEventListener("pointercancel", onRelease);
+        /* on the window, not the hit box: a pointer that leaves the page or
+           slips into an iframe still has to be able to put her down */
+        window.addEventListener("pointerup", onRelease);
+        window.addEventListener("pointercancel", onRelease);
+        window.addEventListener("mouseup", onRelease);
         Array.prototype.forEach.call(document.querySelectorAll("iframe"), function (f) {
             f.addEventListener("pointerover", onFrameEnter);
         });
