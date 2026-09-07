@@ -185,6 +185,6 @@
 
     body.onload = start;
     eyes.onload = start;
-    body.src = "catclock-body.png";
-    eyes.src = "catclock-eyes.png";
+    body.src = "/catclock/catclock-body.png";
+    eyes.src = "/catclock/catclock-eyes.png";
 })();

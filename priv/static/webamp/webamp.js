@@ -3,8 +3,14 @@ import { makeMusicKitMediaClass } from "./musicKitMedia.js";
 import { getPlaylist } from "./playlist.js";
 import { createGenWindow, genTextString } from "./genWindow.js";
 
-const DEVELOPER_TOKEN =
-  "eyJhbGciOiJFUzI1NiIsImtpZCI6IjgyR1pTVVE0U0IifQ.eyJpc3MiOiI4MjQ1QktER1k4IiwiaWF0IjoxNzg4NjkwMDI3LCJleHAiOjE4MDQyNDIwMjcsIm9yaWdpbiI6WyJodHRwczovL2tmYXJ3ZWxsLm9yZyJdfQ.JrsSjk180PuSddOojQCPIurdgTD2NEKF65yAgnjBAVphD--W-18hJCBCFWpHKGobaBmlI2kRMMDFA8ycZGaboQ";
+async function developerToken() {
+  const response = await fetch("/api/apple-music/token");
+  if (!response.ok) {
+    throw new Error(`Could not fetch Apple Music token: ${response.status}`);
+  }
+  const { token } = await response.json();
+  return token;
+}
 
 const PLAYLIST_ID = "pl.u-38oWZlWtPXjj6GZ";
 const WINDOW_HEIGHT = 58;
@@ -306,7 +312,7 @@ function matchSkinColors(webampEl) {
 async function main() {
   await musicKitReady();
   const music = await MusicKit.configure({
-    developerToken: DEVELOPER_TOKEN,
+    developerToken: await developerToken(),
     app: { name: "Webamp", build: "1.0.0" },
   });
   renderAuth(music);

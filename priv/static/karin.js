@@ -23,14 +23,16 @@
     var BOX_W = 260 * SCALE;    /* wide enough that swinging does not clip her */
     var BOX_H = 280 * SCALE;
 
-    var SIT_AFTER = 60000;      /* idle this long and she goes and sits down */
+    var LONG_PRESS = 450;       /* touch held this long opens her menu */
+
+    var SIT_AFTER = 20000;      /* idle this long and she goes and sits down */
     var SIT_ARRIVE = 4;         /* she has to be this close before she can sit */
     var SIT_BLEND = 0.9;        /* seconds to stand up or settle down */
     var SIT_CROUCH = 0.35;      /* where the crouch key sits along that blend */
     var SIT_TUCK = 0.72;        /* ...and where she is down with her knees up */
     var SIT_REACH = 0.87;       /* ...and where her knees have straightened out */
     var SIT_YAW = -68;          /* turned side-on, back to the window */
-    var SIT_OFFSET = 320;       /* ...and how far left of it she sits. A fixed
+    var SIT_OFFSET = 288;       /* ...and how far left of it she sits. A fixed
                                    px offset, not her measured width, which
                                    changes between standing and sitting and
                                    would move the spot out from under her */
@@ -88,6 +90,8 @@
     var box = null;
     var av = null;
     var raf = 0;
+    var destroyed = false;      /* she has been blown up and is not coming back
+                                   until the page is reloaded */
 
     /* where she is: x/y are the box's top-left, in page px */
     var x = 0;
@@ -319,6 +323,12 @@
 
     function centerX() {
         return x + BOX_W / 2;
+    }
+
+    function overPlatform(cx) {
+        if (!platform) return false;
+        var r = platform.getBoundingClientRect();
+        return !!(r.width && r.height) && cx >= r.left && cx <= r.right;
     }
 
     /* She fills this much of the box's height. Framing her by height alone --
@@ -999,6 +1009,13 @@
             if (x < minX()) { x = minX(); vx = -vx * BOUNCE; }
             if (x > maxX()) { x = maxX(); vx = -vx * BOUNCE; }
 
+            /* a bounce can carry her off the side of what she landed on */
+            if (platform && !overPlatform(centerX())) {
+                platform = null;
+                platformX = null;
+                ground = floorY();
+            }
+
             /* landing on a window she was falling over */
             if (vy > 0) {
                 var landed = landingBetween(wasFoot, footY(), centerX());
@@ -1156,6 +1173,7 @@
     var last = 0;
 
     function frame(now) {
+        if (destroyed) { raf = 0; return; }
         raf = requestAnimationFrame(frame);
         frames++;
         var dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016;
@@ -1182,6 +1200,7 @@
         /* Hidden by visibility rather than display: a canvas laid out at no
            size renders at no size, and stays blank when she is let back in
            until something makes the viewer measure itself again. */
+        if (destroyed) return;
         if (box) box.style.visibility = show ? "" : "hidden";
         if (!av) return;
         if (show && !raf) {
@@ -1242,6 +1261,8 @@
     }
 
     function onGrab(e) {
+        /* only the primary button picks her up; the right one is for her menu */
+        if (e.button !== 0 && e.button !== undefined) return;
         if (held) return;
         held = e.pointerId || 1;
         tapX = e.clientX;
@@ -1269,7 +1290,6 @@
         held = 0;
         mode = "fall";
         dropFrom = y;
-        if (Math.abs(e.clientX - tapX) + Math.abs(e.clientY - tapY) < 6) openImmersive();
         vx = clamp(vx, -THROW, THROW);
         vy = clamp(vy, -THROW, THROW);
     }
@@ -1329,6 +1349,18 @@
         window.addEventListener("pointermove", onPointerMove);
         hit.addEventListener("wheel", onWheel, { passive: false });
         hit.addEventListener("pointerdown", onGrab);
+        hit.addEventListener("contextmenu", menu);
+        watchLongPress(hit, function (x, y) {
+            /* she is being held by the same press; put her down first */
+            if (held) {
+                held = 0;
+                mode = "fall";
+                vx = 0;
+                vy = 0;
+            }
+
+            openMenuAt(x, y);
+        });
         hit.addEventListener("pointerup", onRelease);
         hit.addEventListener("pointercancel", onRelease);
         Array.prototype.forEach.call(document.querySelectorAll("iframe"), function (f) {
@@ -1345,6 +1377,126 @@
         ptrStill = performance.now();
         watchRoom();
         updatePresence();
+    }
+
+    /* Right-clicking her offers the one thing you can do to a desktop pet that
+       she cannot undo. */
+    function menu(event) {
+        event.preventDefault();
+        openMenuAt(event.clientX, event.clientY);
+    }
+
+    function openMenuAt(clientX, clientY) {
+        closeMenu();
+
+        var items = [
+            ["AR Quick Look (iOS/visionOS)", openImmersive, arLink !== null],
+            ["Destroy", destroy, true]
+        ];
+
+        var el = document.createElement("div");
+        el.id = "karin-menu";
+        items.forEach(function (item) {
+            var button = document.createElement("button");
+            button.type = "button";
+            button.textContent = item[0];
+            button.disabled = !item[2];
+            /* pointerdown, not click: the dismissal below runs on pointerdown
+               too, and a button already out of the document sees no click */
+            if (item[2]) {
+                button.addEventListener("pointerdown", function (e) {
+                    e.preventDefault();
+                    closeMenu();
+                    item[1]();
+                });
+            }
+            el.appendChild(button);
+        });
+        document.body.appendChild(el);
+
+        var right = clientX + el.offsetWidth > window.innerWidth;
+        var below = clientY + el.offsetHeight > window.innerHeight;
+        el.style.left = (right ? clientX - el.offsetWidth : clientX) + "px";
+        el.style.top = (below ? clientY - el.offsetHeight : clientY) + "px";
+
+        document.addEventListener("pointerdown", dismissMenu, true);
+        document.addEventListener("keydown", dismissMenu, true);
+    }
+
+    function dismissMenu(event) {
+        var el = document.getElementById("karin-menu");
+        if (!el) return;
+        if (event.type === "pointerdown" && el.contains(event.target)) return;
+        if (event.type === "keydown" && event.key !== "Escape") return;
+        closeMenu();
+    }
+
+    /* Touch has no right button, so a press held still opens the menu. */
+    function watchLongPress(el, open) {
+        var timer = 0;
+        var from = null;
+
+        function cancel() {
+            clearTimeout(timer);
+            timer = 0;
+            from = null;
+        }
+
+        el.addEventListener("pointerdown", function (e) {
+            if (e.pointerType !== "touch") return;
+            from = { x: e.clientX, y: e.clientY };
+            timer = setTimeout(function () {
+                timer = 0;
+                open(from.x, from.y);
+            }, LONG_PRESS);
+        });
+
+        el.addEventListener("pointermove", function (e) {
+            if (!from) return;
+            if (Math.abs(e.clientX - from.x) + Math.abs(e.clientY - from.y) > 8) cancel();
+        });
+
+        el.addEventListener("pointerup", cancel);
+        el.addEventListener("pointercancel", cancel);
+    }
+
+    function closeMenu() {
+        var el = document.getElementById("karin-menu");
+        if (el) el.remove();
+        document.removeEventListener("pointerdown", dismissMenu, true);
+        document.removeEventListener("keydown", dismissMenu, true);
+    }
+
+    var BOOM_FRAMES = 16;
+    var BOOM_W = 71;
+    var BOOM_H = 100;
+    var BOOM_SCALE = 3;
+    var BOOM_RISE = 0.32;
+
+    function burst() {
+        var rect = hit.getBoundingClientRect();
+        var boom = document.createElement("div");
+
+        boom.className = "karin-explosion";
+        boom.style.left = (rect.left + rect.width / 2 - BOOM_W / 2) + "px";
+        boom.style.top = (rect.top + rect.height * BOOM_RISE - BOOM_H / 2) + "px";
+        boom.style.transform = "scale(" + BOOM_SCALE + ")";
+        document.body.appendChild(boom);
+
+        boom.addEventListener("animationend", function () { boom.remove(); });
+    }
+
+    function destroy() {
+        if (destroyed) return;
+        destroyed = true;
+
+        burst();
+
+        if (raf) { cancelAnimationFrame(raf); raf = 0; }
+        if (box) {
+            box.classList.add("destroyed");
+            setTimeout(function () { box.remove(); box = null; }, 400);
+        }
     }
 
     function load() {

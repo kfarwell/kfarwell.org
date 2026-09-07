@@ -1,0 +1,131 @@
+/* Karin, the desktop pet. karin.js owns where she stands; this only describes
+   the box she is drawn in. */
+
+/* Width, height and transform come from karin.js, so the box and the physics
+   agree on where she is. */
+#karin {
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* above the windows, whose z-index the site bumps on every focus */
+    z-index: 2147483000;
+    touch-action: none;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    opacity: 0;
+    transition: opacity 0.6s;
+    will-change: transform;
+}
+
+#karin.ready {
+    opacity: 1;
+}
+
+/* The viewer mounts its canvas into #stage. */
+#karin #stage {
+    position: absolute;
+    inset: 0;
+}
+
+/* The AR Quick Look anchor a tap triggers; never meant to be seen. */
+#karin a[rel="ar"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#karin canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* The box is a transparent rectangle over the page, so only this part of it --
+   roughly her body -- takes pointer events. It has to be a real element rather
+   than a hit test on the box: a cross-origin iframe under her would otherwise
+   swallow the press before the page saw it. */
+#karin .hit {
+    position: absolute;
+    /* karin.js sizes this from her actual silhouette; these are the fallback */
+    left: 39%;
+    right: 39%;
+    top: 6%;
+    bottom: 0;
+    pointer-events: auto;
+}
+
+/* What is left of her once the shards are away. */
+#karin.destroyed {
+    opacity: 0;
+    transform-origin: center bottom;
+    transition: opacity 0.35s, filter 0.15s;
+    filter: brightness(4);
+    pointer-events: none;
+}
+
+/* Explosion animation. Sixteen frames in a strip, stepped through once. */
+.karin-explosion {
+    position: fixed;
+    z-index: 2147483001;
+    pointer-events: none;
+    width: 71px;
+    height: 100px;
+    background-image: url("karin/explosion.png");
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    animation: karin-explosion 0.8s steps(16) forwards;
+}
+
+@keyframes karin-explosion {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: -1136px 0;
+    }
+}
+
+/* Her one menu, in the same 98 dress as the rest of the desktop. */
+#karin-menu {
+    position: fixed;
+    z-index: 2147483002;
+    background: silver;
+    padding: 2px;
+    box-shadow: inset -1px -1px grey, inset 1px 1px #fff,
+        inset -2px -2px #0a0a0a, inset 2px 2px #dfdfdf;
+    font-family: "Pixelated MS Sans Serif", Arial;
+    font-size: 11px;
+    -webkit-font-smoothing: none;
+}
+
+#karin-menu button {
+    display: block;
+    width: 100%;
+    min-width: 90px;
+    min-height: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 3px 18px 3px 8px;
+    text-align: left;
+    color: #222;
+    text-shadow: none;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+}
+
+#karin-menu button:hover:not(:disabled) {
+    background: #000080;
+    color: #fff;
+}
+
+#karin-menu button:disabled {
+    color: grey;
+    text-shadow: 1px 1px 0 #fff;
+    cursor: default;
+}

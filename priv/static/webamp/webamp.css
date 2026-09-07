@@ -60,3 +60,9 @@
         var(--button-light, #adb5c6) var(--button-dark, #26253b);
     box-shadow: inset -1px -1px 0 var(--button-highlight, #efffff);
 }
+
+/* Webamp puts its context menu on the body with a z-index from its own window
+   numbering, which script.js raises #webamp-host past on every click. */
+#webamp-context-menu {
+    z-index: 2147482000 !important;
+}

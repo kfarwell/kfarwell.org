@@ -17,11 +17,29 @@ var webampHost = document.getElementById("webamp-host");
 var catclockWindow = document.getElementById("catclock-window");
 var kfarwellWindow = document.getElementById("kfarwell-window");
 var iconArea = document.getElementById("icons");
+var kyleApp = document.getElementById("kyle-app");
+
+document.getElementById("credits-window")
+    .querySelector(".window-body")
+    .appendChild(document.getElementById("credits"));
+
 var files = [
     {section: testimonials, window: document.getElementById("testimonials-window")},
     {section: friends, window: document.getElementById("friends-window")}
 ];
 var theEnd = document.getElementById("the-end");
+var chatWindow = document.getElementById("chat-window");
+
+function workArea() {
+    var dockBox = dockTiles.getBoundingClientRect();
+    var badgeBox = buttons.getBoundingClientRect();
+    return {
+        left: 0,
+        top: 0,
+        width: Math.max(minWidth, Math.min(dockBox.left, window.innerWidth)),
+        height: Math.max(minHeight, Math.min(badgeBox.top, window.innerHeight))
+    };
+}
 
 var minWidth = 240;
 var minHeight = 120;
@@ -112,12 +130,7 @@ function manage(win) {
             restore = minimized ? null : measure();
             minimized = false;
             win.classList.remove("minimized");
-            place({
-                left: 0,
-                top: 0,
-                width: window.innerWidth,
-                height: window.innerHeight
-            });
+            place(workArea());
         } else if (restore) {
             place(restore);
         } else {
@@ -195,12 +208,7 @@ function manage(win) {
 
     window.addEventListener("resize", function () {
         if (maximized) {
-            place({
-                left: 0,
-                top: 0,
-                width: window.innerWidth,
-                height: window.innerHeight
-            });
+            place(workArea());
         }
     });
 
@@ -216,6 +224,12 @@ window.addEventListener("blur", function () {
     }
 });
 
+var chatClosed = false;
+
+chatWindow.querySelector("[aria-label=Close]").addEventListener("click", function () {
+    chatClosed = true;
+});
+
 webampHost.addEventListener("pointerdown", function () {
     webampHost.style.zIndex = ++frontmost;
 }, true);
@@ -228,7 +242,7 @@ document.addEventListener("click", function (event) {
     });
 });
 
-var gridX = 88;
+var gridX = 76;
 var gridY = 64;
 var gridOrigin = null;
 
@@ -334,23 +348,34 @@ function updateIcons() {
     var bare = kfarwellWindow.hidden
         || kfarwellWindow.classList.contains("minimized");
     iconArea.style.display = (desktop.matches || bare) ? "" : "none";
+    kyleApp.hidden = !kfarwellWindow.hidden;
 }
+
+kyleApp.addEventListener("click", function () {
+    kfarwellWindow.hidden = false;
+    kfarwellWindow.style.zIndex = ++frontmost;
+});
 
 new MutationObserver(updateIcons).observe(kfarwellWindow, {
     attributes: true,
     attributeFilter: ["class", "hidden"]
 });
 
+var fixedSize = ["catclock-window"];
+
 function matchLayout() {
     windows.forEach(function (managed) {
         managed.maximize.disabled =
-            !desktop.matches || managed.element.id !== "kfarwell-window";
+            !desktop.matches || fixedSize.indexOf(managed.element.id) !== -1;
         if (!desktop.matches) {
             managed.reset();
         }
     });
 
     catclockWindow.hidden = !desktop.matches;
+    if (!chatClosed) {
+        chatWindow.hidden = !desktop.matches;
+    }
     updateIcons();
 
     if (desktop.matches) {
@@ -359,6 +384,7 @@ function matchLayout() {
         });
         dockTiles.appendChild(toggle);
         dockTiles.appendChild(dock);
+        dockTiles.appendChild(kyleApp);
         document.body.insertBefore(buttons, toasters);
     } else {
         gridOrigin = null;
