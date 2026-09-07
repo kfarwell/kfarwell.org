@@ -11,6 +11,9 @@
  * towards it until she is under it or has run out of floor, then stands and
  * watches it; left alone for long enough she goes and sits against Winamp. Grab
  * her and she follows the cursor on a spring; let go and she falls.
+ *
+ * One Karin per device, not per window: the windows elect an owner over a
+ * BroadcastChannel, and she is handed between them in mid-air.
  */
 (function () {
     "use strict";
@@ -88,7 +91,9 @@
     var desktop = window.matchMedia("(min-width: 656px)");
 
     var box = null;
+    var stage = null;
     var av = null;
+    var owner = false;          /* this window is the one she lives in */
     var raf = 0;
     var destroyed = false;      /* she has been blown up and is not coming back
                                    until the page is reloaded */
@@ -133,7 +138,19 @@
     var sitting = true;         /* what she is heading towards */
     var everMoved = false;      /* has the pointer moved since the page loaded */
     var dazeT = 0;              /* 1 at the moment she lands, 0 as it wears off */
-    var held = 0;               /* pointerId, or 0 */
+    var held = 0;               /* pointerId, REMOTE, or 0 */
+    var localPtr = 0;           /* the pointer we have capture of, held or not */
+    var driving = null;         /* peer carrying her on the end of our pointer */
+    var remote = false;         /* ...and the other end of that */
+    var carrySX = 0;            /* where that pointer is, screen px */
+    var carrySY = 0;
+    var carriedAt = 0;
+    var REMOTE = -1;            /* stands in for a pointer in another window */
+    var CARRY_LOST = 1500;      /* silence this long and she is put down */
+    var mirror = false;         /* she is another window's; we draw our half */
+    var mirrorAt = 0;
+    var pose = null;
+    var MIRROR_LOST = 250;      /* ...and this long after the poses stop, we do not */
 
     var ptrX = window.innerWidth / 2;
     var ptrY = window.innerHeight / 2;
@@ -977,9 +994,8 @@
         av.setExpression(name);
     }
 
-    function step(dt, now) {
-        dazed = now < dizzyUntil;
-        dazeT = dazed ? (dizzyUntil - now) / DIZZY_MS : 0;
+    /* Returns true if she has gone to another window, leaving nothing to draw. */
+    function move(dt, now) {
         var ground = floorY();
 
         if (mode === "held") {
@@ -988,7 +1004,7 @@
             var was = vx;
             vx += ((ptrX - handX - x) * STIFF - vx * DAMP) * dt;
             vy += ((ptrY - handY - y) * STIFF - vy * DAMP) * dt;
-            x = clamp(x + vx * dt, minX(), maxX());
+            x = hold(x + vx * dt);
             y += vy * dt;
 
             /* and she swings under it: a pendulum driven by the hand moving */
@@ -1000,14 +1016,19 @@
             swingStep(limbs.arm, dt, push);
             swingStep(limbs.legL, dt, push);
             swingStep(limbs.legR, dt, push);
+
+            if (carryOut()) return true;
+            if (remote && now - carriedAt > CARRY_LOST) drop();
         } else if (mode === "fall") {
             vy += GRAVITY * dt;
             x += vx * dt;
             var wasFoot = footY();
             y += vy * dt;
 
-            if (x < minX()) { x = minX(); vx = -vx * BOUNCE; }
-            if (x > maxX()) { x = maxX(); vx = -vx * BOUNCE; }
+            if (tossOut()) return true;
+
+            if (x < minX() && !openEdge(-1)) { x = minX(); vx = -vx * BOUNCE; }
+            if (x > maxX() && !openEdge(1)) { x = maxX(); vx = -vx * BOUNCE; }
 
             /* a bounce can carry her off the side of what she landed on */
             if (platform && !overPlatform(centerX())) {
@@ -1128,6 +1149,15 @@
         if (sitT > 0.05) want = SIT_YAW;
         yaw += (want - yaw) * Math.min(1, dt * 6);
         twist += (wantTwist - twist) * Math.min(1, dt * 5);
+        return false;
+    }
+
+    function step(dt, now) {
+        dazed = now < dizzyUntil;
+        dazeT = dazed ? (dizzyUntil - now) / DIZZY_MS : 0;
+
+        if (mirror) adoptPose();
+        else if (move(dt, now)) return;
 
         measureHead();
         /* Re-taken when she sits or stands, since that changes her outline, and
@@ -1135,7 +1165,7 @@
            she is placed before she is ever shown, and again a few frames later
            once the viewer has applied her pose over the one it starts in. */
         var posture = sitT > 0.5 ? 1 : 0;
-        if ((mode === "idle" || mode === "sit")
+        if (!mirror && (mode === "idle" || mode === "sit")
             && (!haveWidth || widthPosture !== posture || frames === 6)) {
             measureWidth();
             widthPosture = posture;
@@ -1143,7 +1173,9 @@
             if (mode === "sit") x = sitX();
             box.classList.add("ready");
         }
-        if (mode === "held" || mode === "fall") {
+        if (mirror) {
+            box.classList.add("ready");
+        } else if (mode === "held" || mode === "fall") {
             var sp = projectSpan();
             if (sp) { spanL = sp[0]; spanR = sp[1]; }
         } else if (haveWidth) {
@@ -1151,7 +1183,8 @@
             spanR = restR;
         }
         holdSkirt(mode === "held" || mode === "fall");
-        if (mode === "held") setFace(HELD_FACE);
+        if (mirror) setFace(pose.face);
+        else if (mode === "held") setFace(HELD_FACE);
         else if (now < dizzyUntil) setFace(DIZZY);
         else if (overHead(ptrX, ptrY)) setFace(REACT);
         else setFace(FACE);
@@ -1168,12 +1201,18 @@
         orient();
         lookAtPointer(now);
         place();
+
+        if (!mirror && straddles()) send({ t: "pose", pose: poseState() });
     }
 
     var last = 0;
 
     function frame(now) {
         if (destroyed) { raf = 0; return; }
+        /* A dormant window runs its first frames hidden: they measure her and
+           frame the camera, so a catch is drawn straight away. */
+        if (!owner && !mirror && frames > WARM_FRAMES) { raf = 0; return; }
+        if (mirror && now - mirrorAt > MIRROR_LOST) { setMirror(false); return; }
         raf = requestAnimationFrame(frame);
         frames++;
         var dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016;
@@ -1196,14 +1235,21 @@
     }
 
     function updatePresence() {
-        var show = hasRoom();
+        var show = (owner || mirror) && hasRoom();
         /* Hidden by visibility rather than display: a canvas laid out at no
            size renders at no size, and stays blank when she is let back in
            until something makes the viewer measure itself again. */
         if (destroyed) return;
-        if (box) box.style.visibility = show ? "" : "hidden";
+        if (box) {
+            /* Carrying her into another window, the box stays: taking it out
+               of the layout would drop the pointer capture. Only she goes. */
+            box.style.visibility = (show || driving) ? "" : "hidden";
+            if (stage) stage.style.visibility = show ? "" : "hidden";
+            /* a mirrored Karin is a picture; she is grabbed where she lives */
+            if (hit) hit.style.pointerEvents = (mirror && !driving) ? "none" : "";
+        }
         if (!av) return;
-        if (show && !raf) {
+        if ((show || frames <= WARM_FRAMES) && !raf) {
             last = 0;
             relayout();
             raf = requestAnimationFrame(frame);
@@ -1225,6 +1271,12 @@
     }
 
     function onPointerMove(e) {
+        /* another window's pointer has her; it says where, not this one */
+        if (remote) return;
+        if (driving) {
+            var vp = myRect();
+            send({ t: "carry", to: driving, sx: vp.x + e.clientX, sy: vp.y + e.clientY });
+        }
         ptrX = e.clientX;
         ptrY = e.clientY;
         /* released somewhere we never heard about, off-window or over an iframe */
@@ -1266,7 +1318,7 @@
         /* only the primary button picks her up; the right one is for her menu */
         if (e.button !== 0 && e.button !== undefined) return;
         if (held) return;
-        held = e.pointerId || 1;
+        held = localPtr = e.pointerId || 1;
         tapX = e.clientX;
         tapY = e.clientY;
         mode = "held";
@@ -1287,10 +1339,20 @@
     }
 
     function onRelease(e) {
+        if (driving) {
+            if (e && e.pointerId && e.pointerId !== localPtr) return;
+            document.body.style.userSelect = "";
+            send({ t: "drop", to: driving });
+            driving = null;
+            localPtr = 0;
+            updatePresence();
+            return;
+        }
         if (!held) return;
         if (e && e.pointerId && e.pointerId !== held) return;
         document.body.style.userSelect = "";
         held = 0;
+        localPtr = 0;
         mode = "fall";
         dropFrom = y;
         vx = clamp(vx, -THROW, THROW);
@@ -1494,9 +1556,15 @@
 
     function destroy() {
         if (destroyed) return;
+        send({ t: "boom" });
+        blowUp();
+    }
+
+    function blowUp() {
+        if (destroyed) return;
         destroyed = true;
 
-        burst();
+        if (owner) burst();
 
         if (raf) { cancelAnimationFrame(raf); raf = 0; }
         if (box) {
@@ -1505,12 +1573,463 @@
         }
     }
 
+    /* --------------------------------------------------------------------
+       One Karin per device. Every window joins a BroadcastChannel and says
+       where it is on the screen; one of them owns her and the rest sit
+       dormant, warm enough to take her at a moment's notice.
+
+       Screen px are the only frame the windows share. Nothing reports where a
+       viewport sits on the screen, so it comes out of the window's outer and
+       inner boxes, taking the chrome to be along the top with an even border
+       either side. */
+
+    var CHANNEL = "karin";
+    var BEAT = 700;             /* the owner says she is still here this often */
+    var LOST = 2400;            /* ...and is given up on this long after it stops */
+    var STALE = 4000;           /* a window quiet this long is not on screen */
+    var LISTEN = 400;           /* wait this long at boot before claiming her */
+    var PROBE = 6;              /* px past our edge the neighbours are asked about */
+    var WARM = 4000;            /* a dormant window loads the viewer this late */
+    var WARM_FRAMES = 8;        /* ...and runs this many hidden frames */
+
+    var chan = null;
+    var me = Math.random().toString(36).slice(2);
+    var claimedAt = 0;          /* when we took her; the older claim wins a tie */
+    var heardAt = 0;            /* when the owner last said anything */
+    var peers = {};             /* id -> { at, rect } for every other window */
+    var seen = false;           /* another window has spoken for her */
+    var pending = null;         /* a throw that landed before the viewer loaded */
+    var handover = null;        /* where the last owner left her as it closed */
+    var loading = false;
+
+    /* The viewport, in screen px. */
+    function myRect() {
+        var border = Math.max(0, (window.outerWidth - window.innerWidth) / 2);
+        return {
+            x: window.screenX + border,
+            y: window.screenY + (window.outerHeight - window.innerHeight) - border,
+            w: window.innerWidth,
+            h: viewportHeight()
+        };
+    }
+
+    function inRect(r, sx, sy) {
+        return sx >= r.x && sx < r.x + r.w && sy >= r.y && sy < r.y + r.h;
+    }
+
+    function peerCount() {
+        var n = 0;
+        var now = Date.now();
+        for (var id in peers) {
+            if (now - peers[id].at > STALE) delete peers[id];
+            else n++;
+        }
+        return n;
+    }
+
+    /* Which window covers a point. Overlapping windows are a coin toss: the
+       stacking order is not visible from in here. */
+    function peerAt(sx, sy) {
+        var now = Date.now();
+        for (var id in peers) {
+            if (now - peers[id].at > STALE) { delete peers[id]; continue; }
+            if (peers[id].room && inRect(peers[id].rect, sx, sy)) return id;
+        }
+        return null;
+    }
+
+    /* Thrown over the top of a window she is in the strip that belongs to the
+       browser, where no page contains her, so the window she is coming down
+       into is picked by column instead. She crosses that gap undrawn. */
+    function peerUnder(sx, sy) {
+        var now = Date.now();
+        var best = null;
+        for (var id in peers) {
+            var p = peers[id];
+            if (now - p.at > STALE) { delete peers[id]; continue; }
+            if (!p.room) continue;
+            if (sx < p.rect.x || sx >= p.rect.x + p.rect.w) continue;
+            if (sy > p.rect.y + p.rect.h) continue;
+            if (!best || p.rect.y < peers[best].rect.y) best = id;
+        }
+        return best;
+    }
+
+    /* Whose she is about to be. Over our own column she stays ours, however
+       high: what goes up over this window comes back down into it. */
+    function catcher(sx, sy) {
+        var to = peerAt(sx, sy);
+        if (to) return to;
+        var vp = myRect();
+        if (sx >= vp.x && sx < vp.x + vp.w) return null;
+        return peerUnder(sx, sy);
+    }
+
+    /* Every message doubles as this window saying where it is. */
+    function send(msg) {
+        if (!chan) return;
+        msg.from = me;
+        msg.rect = myRect();
+        msg.room = hasRoom();
+        try { chan.postMessage(msg); } catch (err) { /* channel closed */ }
+    }
+
+    /* Screen px; carry is the pointer she is hanging from, if any. */
+    function snapshot(carry) {
+        var vp = myRect();
+        return {
+            carry: carry || null,
+            x: vp.x + x,
+            y: vp.y + y,
+            vx: vx,
+            vy: vy,
+            swing: swing,
+            swingV: swingV,
+            yaw: yaw,
+            limbs: {
+                arm: limbs.arm.a, legL: limbs.legL.a, legR: limbs.legR.a
+            }
+        };
+    }
+
+    function applyState(s) {
+        if (!av) { pending = s; return; }
+        var vp = myRect();
+        platform = null;
+        platformX = null;
+        mode = "fall";
+        sitT = 0;
+        sitting = false;
+        everMoved = true;
+        /* Not clamped to our own walls: she comes in hanging over the edge
+           she crossed, and squaring her up with them makes her jump. */
+        x = s.x - vp.x;
+        y = s.y - vp.y;
+        vx = s.vx;
+        vy = s.vy;
+        swing = s.swing;
+        swingV = s.swingV;
+        yaw = s.yaw;
+        limbs.arm.a = s.limbs.arm;
+        limbs.legL.a = s.limbs.legL;
+        limbs.legR.a = s.limbs.legR;
+        dropFrom = y;
+        ptrStill = performance.now();
+        woke = performance.now() - WAKE_DELAY;
+        everMoved = true;
+
+        /* Still on the end of another window's pointer, which keeps saying
+           where it is until it lets go -- unless the pointer is ours. */
+        if (s.carry) {
+            carrySX = s.carry.sx;
+            carrySY = s.carry.sy;
+            carriedAt = performance.now();
+            ptrX = carrySX - vp.x;
+            ptrY = carrySY - vp.y;
+            mode = "held";
+            remote = !localPtr;
+            held = localPtr || REMOTE;
+            driving = null;
+            document.body.style.userSelect = "none";
+        } else {
+            remote = false;
+            held = 0;
+            document.body.style.userSelect = "";
+        }
+        box.classList.add("ready");
+        place();
+        updatePresence();
+    }
+
+    function drop() {
+        remote = false;
+        held = 0;
+        document.body.style.userSelect = "";
+        mode = "fall";
+        dropFrom = y;
+        vx = clamp(vx, -THROW, THROW);
+        vy = clamp(vy, -THROW, THROW);
+    }
+
+    /* The pointer carrying her has left this window. She goes with it: the
+       window it went to carries on the drag from the positions we send, and
+       this one is left holding nothing but the press. */
+    function carryOut() {
+        if (!chan || !owner || mode !== "held") return false;
+        var vp = myRect();
+        var sx = remote ? carrySX : vp.x + ptrX;
+        var sy = remote ? carrySY : vp.y + ptrY;
+        if (inRect(vp, sx, sy)) return false;
+
+        var to = catcher(sx, sy);
+        if (!to) return false;
+        send({ t: "toss", to: to, state: snapshot({ sx: sx, sy: sy }) });
+        /* keep drawing our half until the new owner starts saying how she is */
+        setMirror(true, poseState());
+        if (localPtr) driving = to;
+        else document.body.style.userSelect = "";
+        remote = false;
+        held = 0;
+        release();
+        return true;
+    }
+
+    function tossOut() {
+        if (!chan || !owner || mode !== "fall") return false;
+        var vp = myRect();
+        var sx = vp.x + x + (spanL + spanR) / 2;
+        var sy = vp.y + y + BOX_H / 2;
+        /* pinned to a wall, ask about the strip beyond it rather than where
+           she has been allowed to get to */
+        if (vx < 0 && x <= minX()) sx = vp.x - PROBE;
+        else if (vx > 0 && x >= maxX()) sx = vp.x + vp.w + PROBE;
+        if (inRect(vp, sx, sy)) return false;
+
+        var to = catcher(sx, sy);
+        if (!to) return false;
+        send({ t: "toss", to: to, state: snapshot() });
+        setMirror(true, poseState());
+        release();
+        return true;
+    }
+
+
+    /* Her silhouette, screen px. */
+    function bounds() {
+        var vp = myRect();
+        return {
+            l: vp.x + x + spanL,
+            r: vp.x + x + spanR,
+            t: vp.y + y,
+            b: vp.y + y + BOX_H
+        };
+    }
+
+    function overlaps(r, b) {
+        return b.r > r.x && b.l < r.x + r.w && b.b > r.y && b.t < r.y + r.h;
+    }
+
+    /* Over one of our edges with a window behind it, so someone else is
+       drawing part of her and needs to be told how she is. */
+    function straddles() {
+        if (!chan || !owner) return false;
+        var vp = myRect();
+        var b = bounds();
+        if (b.l >= vp.x && b.r <= vp.x + vp.w && b.t >= vp.y && b.b <= vp.y + vp.h) {
+            return false;
+        }
+        var now = Date.now();
+        for (var id in peers) {
+            if (now - peers[id].at > STALE) { delete peers[id]; continue; }
+            if (peers[id].room && overlaps(peers[id].rect, b)) return true;
+        }
+        return false;
+    }
+
+    /* A wall with a window behind it is not a wall. */
+    function openEdge(dir) {
+        if (!chan || !owner) return false;
+        var vp = myRect();
+        return !!catcher(dir < 0 ? vp.x - PROBE : vp.x + vp.w + PROBE,
+            vp.y + y + BOX_H / 2);
+    }
+
+    function hold(nx) {
+        if (nx < minX() && !openEdge(-1)) return minX();
+        if (nx > maxX() && !openEdge(1)) return maxX();
+        return nx;
+    }
+
+    /* Everything the pose depends on, for the window next door to copy rather
+       than simulate: two windows stepping the same physics on their own clocks
+       drift apart within a second and she tears in half down the join. */
+    function poseState() {
+        var vp = myRect();
+        return {
+            x: vp.x + x, y: vp.y + y,
+            l: spanL, r: spanR,
+            mode: mode,
+            yaw: yaw, twist: twist, swing: swing, phase: phase,
+            sitT: sitT, grip: grip, airT: airT, daze: dazeT,
+            arm: limbs.arm.a, legL: limbs.legL.a, legR: limbs.legR.a,
+            face: face,
+            px: vp.x + ptrX, py: vp.y + ptrY
+        };
+    }
+
+    function adoptPose() {
+        var vp = myRect();
+        x = pose.x - vp.x;
+        y = pose.y - vp.y;
+        spanL = pose.l;
+        spanR = pose.r;
+        mode = pose.mode;
+        yaw = pose.yaw;
+        twist = pose.twist;
+        swing = pose.swing;
+        phase = pose.phase;
+        sitT = pose.sitT;
+        grip = pose.grip;
+        airT = pose.airT;
+        dazeT = pose.daze;
+        dazed = pose.daze > 0;
+        limbs.arm.a = pose.arm;
+        limbs.legL.a = pose.legL;
+        limbs.legR.a = pose.legR;
+        ptrX = pose.px - vp.x;
+        ptrY = pose.py - vp.y;
+    }
+
+    function setMirror(on, state) {
+        if (on) {
+            pose = state;
+            mirrorAt = performance.now();
+        }
+        if (mirror === on) return;
+        mirror = on;
+        if (on && !loading && !av) load();
+        else updatePresence();
+    }
+
+    function take(state) {
+        if (destroyed) return;
+        mirror = false;
+        /* two windows can briefly both think they own her; a state that came
+           with a toss is newer than whatever we had either way */
+        if (!owner) {
+            owner = true;
+            claimedAt = Date.now();
+            send({ t: "own", at: claimedAt });
+        }
+        if (!loading && !av) load();
+        else updatePresence();
+        if (state) applyState(state);
+    }
+
+    /* Handing her on, or standing aside for an older claim. The viewer stays
+       loaded and merely stops: she may well be thrown straight back. */
+    function release() {
+        if (!owner) return;
+        owner = false;
+        held = 0;
+        /* a press of ours that is still down must not start selecting text */
+        if (!driving) document.body.style.userSelect = "";
+        closeMenu();
+        updatePresence();
+    }
+
+    function onMessage(e) {
+        var m = e.data;
+        if (!m || m.from === me) return;
+        /* blown up here, so not to be answered for to a window opening later */
+        if (destroyed) return;
+        if (m.rect) peers[m.from] = { at: Date.now(), rect: m.rect, room: m.room };
+
+        if (m.t === "hello") {
+            if (owner) send({ t: "own", at: claimedAt });
+            else send({ t: "here" });
+        } else if (m.t === "own") {
+            heardAt = Date.now();
+            seen = true;
+            handover = null;
+            /* claimed at once: older wins, ties split on the ids */
+            if (owner && (m.at < claimedAt || (m.at === claimedAt && m.from < me))) {
+                release();
+            }
+        } else if (m.t === "toss") {
+            if (m.to === me) take(m.state);
+        } else if (m.t === "pose") {
+            /* draw her if any of her reaches into this window */
+            if (owner) return;
+            var vp = myRect();
+            var b = {
+                l: m.pose.x + m.pose.l, r: m.pose.x + m.pose.r,
+                t: m.pose.y, b: m.pose.y + BOX_H
+            };
+            if (overlaps(vp, b)) setMirror(true, m.pose);
+            else setMirror(false);
+        } else if (m.t === "carry") {
+            if (m.to !== me || !remote) return;
+            var vp = myRect();
+            carrySX = m.sx;
+            carrySY = m.sy;
+            carriedAt = performance.now();
+            ptrX = m.sx - vp.x;
+            ptrY = m.sy - vp.y;
+            ptrStill = performance.now();
+            sitting = false;
+        } else if (m.t === "drop") {
+            if (m.to === me && remote) drop();
+        } else if (m.t === "bye") {
+            delete peers[m.from];
+            if (!m.own) return;
+            heardAt = 0;
+            /* whichever of us sits under where she was puts her back there */
+            handover = m.state && inRect(myRect(), m.state.x, m.state.y)
+                ? m.state : null;
+        } else if (m.t === "boom") {
+            blowUp();
+        }
+    }
+
+    function beat() {
+        if (destroyed) return;
+        /* a hand holding her still sends no pointermove, and silence is how
+           the window she is in decides the carry has died */
+        if (driving) {
+            var vp = myRect();
+            send({ t: "carry", to: driving, sx: vp.x + ptrX, sy: vp.y + ptrY });
+            return;
+        }
+        if (owner) { send({ t: "own", at: claimedAt }); return; }
+        send({ t: "here" });
+        /* Timers in a hidden tab are throttled, so a backgrounded owner looks
+           dead from here. Waiting also keeps her out of unwatched tabs. */
+        if (document.hidden && peerCount()) return;
+        if (Date.now() - heardAt > LOST) take(handover);
+    }
+
+    /* Assume she is somewhere already; claim her only if nobody answers. */
+    function join() {
+        if (!window.BroadcastChannel) { take(null); return; }
+        chan = new BroadcastChannel(CHANNEL);
+        chan.onmessage = onMessage;
+        heardAt = Date.now();
+        send({ t: "hello" });
+        setTimeout(function () {
+            if (!seen) take(null);
+        }, LISTEN);
+        setInterval(beat, BEAT);
+        /* A dormant window loads the viewer anyway: fetching six megabytes at
+           the moment she is thrown here would leave her nowhere at all. */
+        setTimeout(function () {
+            if (!owner && !destroyed && hasRoom()) load();
+        }, WARM);
+        /* a closing window says where she was, so the next one can put her back */
+        window.addEventListener("pagehide", function () {
+            if (!chan) return;
+            send({
+                t: "bye",
+                own: owner,
+                state: owner && av ? snapshot() : null
+            });
+        });
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) return;
+            send({ t: "here" });
+            if (!owner && Date.now() - heardAt > LOST) take(handover);
+        });
+        window.addEventListener("resize", function () { send({ t: "here" }); });
+    }
+
     function load() {
+        if (loading) return;
+        loading = true;
         box = document.createElement("div");
         box.id = "karin";
         box.style.width = BOX_W + "px";
         box.style.height = BOX_H + "px";
-        var stage = document.createElement("div");
+        stage = document.createElement("div");
         stage.id = "stage";
         box.appendChild(stage);
         hit = document.createElement("div");
@@ -1534,6 +2053,7 @@
 
         document.addEventListener("karinslime:ready", function (e) {
             start(e.detail);
+            if (pending) { applyState(pending); pending = null; }
         });
 
         window.KS_MODEL = "karin/avatar.glb";
@@ -1544,6 +2064,6 @@
     }
 
     /* she is a 6 MB download -- let the page finish first */
-    if (document.readyState === "complete") load();
-    else window.addEventListener("load", load);
+    if (document.readyState === "complete") join();
+    else window.addEventListener("load", join);
 }());
