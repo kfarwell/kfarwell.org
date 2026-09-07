@@ -39,8 +39,6 @@
                                    px offset, not her measured width, which
                                    changes between standing and sitting and
                                    would move the spot out from under her */
-    var WINAMP_W = 275;         /* where Winamp puts itself: window width, and */
-    var WINAMP_GUTTER = 32;     /* the gap it keeps from the right-hand edge */
     var SIT_BACK = 0.25;        /* a window has to reach this much of her height
                                    above the floor to be worth leaning on */
 
@@ -232,13 +230,11 @@
 
     /* Her spot on the floor with her back to Winamp. With no wall to lean on --
        it has not loaded yet, or it is held too high, crowded up against the
-       left edge, or pulled apart -- she sits where Winamp usually lives, which
-       keeps her off the right-hand edge that Winamp itself occupies. */
+       left edge, or pulled apart -- she leans on the right-hand edge of the
+       screen instead. */
     function sitX() {
         var rects = winampRects();
-        var backAt = desktop.matches
-            ? window.innerWidth - WINAMP_GUTTER - WINAMP_W
-            : window.innerWidth;
+        var backAt = window.innerWidth;
 
         if (rects.length) {
             var floorGap = pageFloor() - rects[rects.length - 1].bottom;
