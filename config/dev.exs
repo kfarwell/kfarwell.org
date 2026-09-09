@@ -8,6 +8,13 @@ import Config
 # to bundle .js and .css sources.
 config :kfarwell, KfarwellWeb.Endpoint,
   http: [ip: {0, 0, 0, 0}, port: String.to_integer(System.get_env("PORT") || "4000")],
+  https: [
+    ip: {0, 0, 0, 0},
+    port: String.to_integer(System.get_env("HTTPS_PORT") || "4001"),
+    cipher_suite: :strong,
+    keyfile: "priv/cert/dev-key.pem",
+    certfile: "priv/cert/dev.pem"
+  ],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,

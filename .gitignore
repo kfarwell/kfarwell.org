@@ -35,3 +35,6 @@ kfarwell-*.tar
 
 # Local secrets.
 .env
+
+# Local development certificate.
+/priv/cert/
