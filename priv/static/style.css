@@ -103,12 +103,29 @@ body {
 
 #dock > * {
     box-sizing: border-box;
+    position: relative;
     width: 64px;
     height: 64px;
     background: url("nextstep-tile.png");
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-bottom: 11px;
+    overflow: hidden;
+}
+
+.dock-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+    text-align: center;
+    font-family: "Pixelated MS Sans Serif", Arial;
+    font-size: 8px;
+    line-height: 1;
+    color: #fff;
+    -webkit-font-smoothing: none;
+    white-space: nowrap;
 }
 
 #dock > *[hidden] {
@@ -117,7 +134,7 @@ body {
 
 #dock img {
     width: auto;
-    height: 48px;
+    height: 36px;
 }
 
 #dock #kyle-app {
@@ -126,6 +143,10 @@ body {
     min-width: 0;
     min-height: 0;
     padding: 0;
+}
+
+#dock #kyle-app {
+    padding-bottom: 0;
 }
 
 #dock #kyle-app img {
@@ -336,8 +357,11 @@ footer > a:hover {
         box-shadow: none;
         min-width: 0;
         min-height: 0;
-        padding: 0;
-        font-size: 32px;
+        font-size: 30px;
+    }
+
+    #dock #toggle .dock-icon {
+        line-height: 1;
     }
 
     #screen {
