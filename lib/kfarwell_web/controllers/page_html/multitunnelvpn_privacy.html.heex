@@ -1,0 +1,30 @@
+<Layouts.page title={@page_title}>
+  <h1>MultiTunnelVPN Privacy Policy</h1>
+  <p>
+    This application does not collect or store personal data, contains no analytics or
+    advertising, and never sends anything to the developer. Your settings, keys, and
+    WireGuard configuration are stored only on your device.
+  </p>
+  <p>
+    Traffic sent to the developer loopback address is reflected back to your device and
+    never leaves it.
+  </p>
+  <p>
+    When the tailnet is turned on, your device connects to the coordination server you
+    choose (Tailscale by default). That server receives the information needed to connect
+    your devices, such as device keys, device name, operating system, and network
+    addresses, and its operator's privacy policy applies. This application asks Tailscale
+    not to collect client logs and never uploads logs.
+  </p>
+  <p>
+    When WireGuard is turned on, your internet traffic is sent, encrypted, to the server
+    in the configuration you provide, and that provider's privacy policy applies.
+  </p>
+  <p>
+    If you installed this application from the App Store, then Apple does collect some
+    personal data. Please see Apple's privacy policy here:
+    <a href="https://www.apple.com/legal/privacy/" target="_blank">
+      https://www.apple.com/legal/privacy/
+    </a>
+  </p>
+</Layouts.page>

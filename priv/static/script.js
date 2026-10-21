@@ -1,10 +1,3 @@
-function toggleMode() {
-    var light = document.documentElement.classList.toggle("light");
-    var button = document.getElementById("toggle");
-    button.querySelector(".dock-icon").textContent = light ? "🌞" : "🌚";
-    button.querySelector(".dock-label").textContent = light ? "Light Mode" : "Dark Mode";
-}
-
 var desktop = window.matchMedia("(min-width: 656px)");
 var toasters = document.getElementById("toasters");
 var dock = document.getElementById("tamanotchi");

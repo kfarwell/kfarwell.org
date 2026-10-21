@@ -16,6 +16,14 @@ var themes = {
 
 var THEME_KEY = "kfarwell:theme";
 
+/* The dock's light switch, on every page the dock is on. */
+function toggleMode() {
+    var light = document.documentElement.classList.toggle("light");
+    var button = document.getElementById("toggle");
+    button.querySelector(".dock-icon").textContent = light ? "🌞" : "🌚";
+    button.querySelector(".dock-label").textContent = light ? "Light Mode" : "Dark Mode";
+}
+
 /* Found by what it points at, since live reload swaps the head's links for
    fresh ones and an id would not survive. */
 function themeLink() {

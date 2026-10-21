@@ -19,13 +19,10 @@ defmodule KfarwellWeb do
 
   # The site's own assets sit at the root of priv/static, next to the bundled
   # LiveView JavaScript in assets/.
-  # The site's own assets sit in priv/static, next to the bundled LiveView
-  # JavaScript in assets/.
   def static_paths do
-    ~w(assets robots.txt badges font catclock toasters webamp karin icons mvdwebcam
-       themes 98.css style.css themes.css karin.css script.js themes.js karin.js
-       cursor.png kyle.png nextstep-tile.png webamp-icon.png emoji.png
-       emoji-LICENSE.txt)
+    ~w(assets robots.txt badges font catclock toasters webamp karin icons themes
+       98.css style.css themes.css karin.css script.js themes.js karin.js cursor.png
+       kyle.png nextstep-tile.png webamp-icon.png emoji.png emoji-LICENSE.txt)
   end
 
   def router do

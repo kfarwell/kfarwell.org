@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="98">
   <head>
-    <title>Kyle Farwell</title>
+    <title>{assigns[:page_title] || "Kyle Farwell"}</title>
     <meta
       name="description"
       content="Lead developer of Flirtual. Trying to bring the world closer together with the power of love and VR!"
@@ -35,17 +35,9 @@
       };
     </script>
   </head>
-  <body>
+  <body class={assigns[:body_class]}>
     {@inner_content}
-    <script src="/script.js">
-    </script>
     <script src="/toasters/toasters.js">
-    </script>
-    <script src="/catclock/catclock.js">
-    </script>
-    <script type="module" src="/webamp/webamp.js">
-    </script>
-    <script src="/karin.js">
     </script>
   </body>
 </html>
