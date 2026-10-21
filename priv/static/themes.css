@@ -1,0 +1,1044 @@
+/*
+ * What a theme cannot do for itself: keep off the desktop and off Webamp's
+ * player, and wear its own machine's window controls in its own places.
+ * Rules are anchored on #screen where a shared selector would outrank them.
+ */
+
+html:not([data-theme="98"]) {
+    background-image: none;
+}
+
+html:not([data-theme="98"]) body {
+    background: none;
+}
+
+/* The player is skinned already; a theme dresses anything called a window. */
+
+#webamp-host .window {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    font-family: "Pixelated MS Sans Serif", Arial;
+    font-size: 11px;
+    margin: 0;
+    min-width: 0;
+    overflow: visible;
+    padding: 0;
+}
+
+#webamp-host .window::before,
+#webamp-host .window::after {
+    content: none;
+}
+
+.chat-panel::before,
+.chat-panel::after {
+    background: none;
+}
+
+/* Windows 98 */
+
+[data-theme="98"] #screen > .window {
+    background: var(--window);
+}
+
+[data-theme="98"] #screen > .window > .title-bar:not(.inactive) {
+    background: linear-gradient(90deg, #a32c56, #e9658b);
+}
+
+/* Windows XP */
+
+[data-theme="xp"] {
+    --panel-bg: #fff;
+    --panel-ink: #222;
+    --panel-border: #7f9db9;
+}
+
+[data-theme="xp"] #screen > .window {
+    box-shadow: inset -1px -1px #a33d60, inset 1px 1px #e9658b,
+        inset -2px -2px #b94870, inset 2px 2px #f291b0,
+        inset -3px -3px #d2537a, inset 3px 3px #ef7fa2;
+}
+
+[data-theme="xp"] #screen > .window:not(.active) {
+    box-shadow: inset -1px -1px #d9a3b5, inset 1px 1px #f3c0d0,
+        inset -2px -2px #e0b0bf, inset 2px 2px #f8d5e0,
+        inset -3px -3px #eabccb, inset 3px 3px #f6cbd9;
+}
+
+[data-theme="xp"] #screen > .window > .title-bar {
+    background: linear-gradient(180deg, #f3a0bf, #ea7097 8%, #e9658b 40%,
+        #ee7ba0 88%, #ee7ba0 93%, #eb6f95 95%, #d2537a 96%, #d2537a);
+    border-color: #e9658b #b94870 transparent;
+}
+
+[data-theme="xp"] #screen > .window > .title-bar > .title-bar-text {
+    text-shadow: 1px 1px #a33d60;
+}
+
+[data-theme="xp"] #screen > .window > .title-bar.inactive {
+    background: linear-gradient(180deg, #fad7e4, #f6c3d4 8%, #f6c0d2 40%,
+        #f8cbda 88%, #f8cbda 93%, #f7c6d6 95%, #ecb3c4 96%, #ecb3c4);
+    border-color: #f6c0d2 #e0b0bf transparent;
+}
+
+[data-theme="xp"] #screen > .window > .title-bar.inactive > .title-bar-text {
+    color: #faf0f4;
+    text-shadow: 1px 1px #d9a3b5;
+}
+
+[data-theme="xp"] #screen > .window:not(.active) .title-bar-controls button {
+    opacity: 0.55;
+}
+
+/* XP's scrollbars are pictures of blue ones, so these are drawn by hand. */
+
+[data-theme="xp"] ::-webkit-scrollbar-track,
+[data-theme="xp"] ::-webkit-scrollbar-corner {
+    background: #fdeaf2;
+    background-image: none;
+}
+
+[data-theme="xp"] ::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #fff6fa, #fcc3da 40%, #f49ec0);
+    background-image: linear-gradient(90deg, #fff6fa, #fcc3da 40%, #f49ec0);
+    border: 1px solid #df1659;
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+[data-theme="xp"] ::-webkit-scrollbar-button {
+    background-color: #fcd9e7;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid #df1659;
+    border-radius: 3px;
+}
+
+[data-theme="xp"] ::-webkit-scrollbar-button:vertical:start {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M3.5 0 7 4H0z' fill='%23a3245a'/%3E%3C/svg%3E");
+}
+
+[data-theme="xp"] ::-webkit-scrollbar-button:vertical:end {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M0 0h7L3.5 4z' fill='%23a3245a'/%3E%3C/svg%3E");
+}
+
+[data-theme="xp"] ::-webkit-scrollbar-button:horizontal:start {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7'%3E%3Cpath d='M0 3.5 4 0v7z' fill='%23a3245a'/%3E%3C/svg%3E");
+}
+
+[data-theme="xp"] ::-webkit-scrollbar-button:horizontal:end {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7'%3E%3Cpath d='M0 0l4 3.5L0 7z' fill='%23a3245a'/%3E%3C/svg%3E");
+}
+
+/* Minimize and maximize are pictures of blue buttons, turned pink. */
+
+[data-theme="xp"] .title-bar-controls button:not([aria-label="Close"]) {
+    background-color: #f9bfd4;
+    filter: hue-rotate(122deg) saturate(0.45) brightness(1.7);
+}
+
+[data-theme="xp"] label.chat-tool {
+    background: #ece9d8;
+    box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff,
+        inset -2px -2px grey, inset 2px 2px #dfdfdf;
+    color: #222;
+    text-shadow: none;
+}
+
+[data-theme="xp"] #screen menu[role="tablist"] {
+    gap: 0;
+}
+
+[data-theme="xp"] #screen menu[role="tablist"] > li {
+    background: linear-gradient(180deg, #fff, #fafaf9 26%, #f0f0ea 95%, #ecebe5);
+    border: 1px solid #91a7b4;
+    border-bottom: 0;
+    border-radius: 3px 3px 0 0;
+    margin-left: -1px;                  /* tabs share an edge, as XP's do */
+}
+
+[data-theme="xp"] #screen menu[role="tablist"] > li:first-child {
+    margin-left: 0;
+}
+
+[data-theme="xp"] #screen menu[role="tablist"] > li > a {
+    color: #222;
+    padding: 1px 12px 3px;
+}
+
+[data-theme="xp"] #screen menu[role="tablist"] > li[aria-selected="true"] {
+    background: #fcfcfe;
+    border-color: #919b9c;
+    border-top-color: #e68b2c;
+    box-shadow: inset 0 2px #ffc73c;
+    position: relative;                 /* over its neighbours' edges */
+    z-index: 1;
+}
+
+/* Windows 7 */
+
+[data-theme="7"] {
+    --w7-w-bg: #c4457fb0;               /* Aero's glass, in the site's hue */
+    --w7-el-bd-h: #b13c64;
+    --w7-el-bd-a: #ab6d83;
+    --w7-el-grad-h: linear-gradient(#fdeaf2 45%, #fdbed7 0, #f5a7c7);
+    --w7-el-grad-a: linear-gradient(#fce5ef, #f6c4d9 30% 50%, #ef98bd 50%,
+        #db6898);
+    --w7-li-bd-hl: #faaaca;
+    --w7-sb-grad-h-1: #fdeaf2;
+    --w7-sb-grad-h-2: #fdbed7;
+    --w7-sb-grad-a-1: #f6c4d9;
+    --w7-sb-grad-a-2: #ef98bd;
+    --panel-bg: #fff;
+    --panel-ink: #222;
+    --panel-border: #abadb3;
+    --panel-radius: 2px;
+}
+
+[data-theme="7"] #screen > .window:not(.active) {
+    --w7-w-bg: #c4457f66;
+}
+
+[data-theme="7"] input[type="radio"]:checked + label::after {
+    background: #eb7cb9;
+    border-color: #6d2740;
+    box-shadow: inset -1px -1px 0 0.5px #8f1647, inset -1px -1px 0 1px #c0195e;
+}
+
+[data-theme="7"] input[type="radio"] + label:hover::before,
+[data-theme="7"] input[type="checkbox"] + label:hover::before {
+    box-shadow: inset 0 0 0 1.5px #fadef2, inset 1px 1px 0 1.5px #f979a8,
+        inset -1px -1px 0 1.5px #fcc6dc, inset 3px 3px 6px #fdb1cd;
+}
+
+[data-theme="7"] input[type="checkbox"] + label:hover::before {
+    background: #fee9f2;
+}
+
+[data-theme="7"] #screen > .window::before {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+[data-theme="7"] #screen > .window > .title-bar > .title-bar-text {
+    margin: 0 6px 0 -10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+[data-theme="7"] .window-body {
+    margin: var(--w7-w-space);
+    margin-top: 0;
+}
+
+[data-theme="7"] #screen > #catclock-window .window-body {
+    margin: 0;
+}
+
+[data-theme="7"] #screen > .window footer,
+[data-theme="7"] .chat .status-bar {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+}
+
+[data-theme="7"] label.chat-tool {
+    background: var(--w7-el-grad);
+    border: 1px solid var(--w7-el-bd);
+    border-radius: var(--w7-el-bdr);
+    box-shadow: var(--w7-el-sd);
+    color: var(--w7-el-c);
+    text-shadow: none;
+}
+
+[data-theme="7"] #screen menu[role="tablist"] {
+    gap: 0;
+}
+
+[data-theme="7"] #screen menu[role="tablist"] > li {
+    background: var(--w7-el-grad);
+    border: 1px solid var(--w7-el-bd);
+    border-bottom: 0;
+    border-radius: 0;
+    box-shadow: var(--w7-el-sd);
+    margin-right: -1px;
+}
+
+[data-theme="7"] #screen menu[role="tablist"] > li > a {
+    color: var(--w7-el-c);
+    padding: 2px 6px;
+}
+
+[data-theme="7"] #screen menu[role="tablist"] > li[aria-selected="true"] {
+    background: var(--w7-surface);
+    box-shadow: none;
+    position: relative;
+    z-index: 1;
+}
+
+/* System 6 */
+
+[data-theme="system"] {
+    --chrome-ink: #000;
+    --chrome-shadow: #000;
+    --chrome-font: Chicago_12, Chicago, sans-serif;
+    --panel-bg: #fff;
+    --panel-ink: #000;
+    --panel-border: #000;
+    --tab-bg: #fff;
+}
+
+[data-theme="system"] #screen > .window {
+    min-width: 0;
+    overflow: visible;
+}
+
+[data-theme="system"] #screen > .window > .title-bar {
+    box-shadow: 0 1px 0 #fff, 0 2px 0 #000;
+    height: 24px;
+    padding: 0 1px;                     /* the lines run to the frame */
+}
+
+[data-theme="system"] #screen > .window > .title-bar > .title-bar-controls {
+    display: contents;
+}
+
+[data-theme="system"] #screen > .window > .title-bar > .title-bar-text {
+    align-self: stretch;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    font-family: var(--chrome-font);
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1;
+    margin: 0 auto;
+    padding: 0 0.5em;
+    text-align: center;
+}
+
+[data-theme="system"] .title-bar-controls button {
+    align-self: center;
+    background-color: #fff;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    flex: none;
+    height: 18px;
+    margin: 0 3px;
+    transform: none;
+    width: 18px;
+}
+
+[data-theme="system"] .title-bar-controls button[aria-label="Close"] {
+    order: -1;
+}
+
+[data-theme="system"] .title-bar-controls button[aria-label="Minimize"] {
+    background: linear-gradient(#000, #000) center no-repeat #fff;
+    background-size: 9px 2px;
+}
+
+[data-theme="system"] .title-bar-controls button[aria-label="Maximize"],
+[data-theme="system"] .title-bar-controls button[aria-label="Restore"] {
+    background: linear-gradient(#000, #000) top 1px left 1px no-repeat #fff;
+    background-size: 7px 7px;
+}
+
+[data-theme="system"] #screen > .window > .title-bar.inactive {
+    background: none;
+}
+
+[data-theme="system"] #screen > .window > .title-bar.inactive
+    > .title-bar-controls button {
+    visibility: hidden;
+}
+
+[data-theme="system"] #screen > .window > .title-bar.inactive
+    > .title-bar-text {
+    color: grey;
+}
+
+[data-theme="system"] .chat-tool.right {
+    margin-left: 0;
+}
+
+[data-theme="system"] #screen menu[role="tablist"] > li > a {
+    color: grey;
+}
+
+[data-theme="system"] #screen menu[role="tablist"] > li[aria-selected="true"] > a {
+    color: #000;
+    font-weight: bold;
+}
+
+[data-theme="system"] .chat-tool {
+    padding: 0 1px;
+}
+
+[data-theme="system"] .chat-tool.wide {
+    padding: 0 3px;
+}
+
+[data-theme="system"] :is(.chat-tool, .chat-form button) {
+    background: #fff;
+    border-image: url("themes/system/button.svg") 30 stretch;
+    border-style: solid;
+    border-width: 5.5px;
+    box-shadow: none;
+    color: #000;
+    font-family: var(--chrome-font);
+    text-shadow: none;
+}
+
+/* Mac OS 8 */
+
+[data-theme="classic"] {
+    --chrome-face: #ccc;
+    --chrome-ink: #000;
+    --chrome-light: #fff;
+    --chrome-shadow: #999;
+    --chrome-font: ChicagoFLF, "Times New Roman", serif;
+    --panel-bg: #fff;
+    --panel-ink: #000;
+    --panel-border: #111;
+    --tab-bg: #ccc;
+}
+
+[data-theme="classic"] #screen > .window {
+    background: #ccc;
+    border: 1px solid #111;
+    box-shadow: 1px 2px #111, inset 1px 1px #fff, inset -1px -1px #999;
+    padding: 3px;
+}
+
+[data-theme="classic"] #screen > .window > .title-bar {
+    align-items: center;
+    background: #ccc;
+    display: flex;
+    font-family: var(--chrome-font);
+    font-size: 13px;
+    height: 20px;
+    padding: 0 2px;
+}
+
+[data-theme="classic"] #screen > .window > .title-bar::before,
+[data-theme="classic"] #screen > .window > .title-bar::after {
+    align-self: stretch;
+    background: repeating-linear-gradient(#ccc 0 1px, #888 1px 2px);
+    content: "";
+    flex: 1;
+    margin: 3px 4px;
+}
+
+[data-theme="classic"] #screen > .window > .title-bar::before {
+    order: 0;
+}
+
+[data-theme="classic"] #screen > .window > .title-bar::after {
+    order: 2;
+}
+
+[data-theme="classic"] #screen > .window > .title-bar > .title-bar-controls {
+    display: contents;
+}
+
+[data-theme="classic"] #screen > .window > .title-bar > .title-bar-text {
+    background: #ccc;
+    order: 1;
+    padding: 0 0.5em;
+}
+
+[data-theme="classic"] .window-body {
+    background: #ddd;
+    border: 1px solid #111;
+    box-shadow: -1px -1px 0 0 #999, 1px 1px 0 0 #fff,
+        inset 1px 1px 0 0 #fff, inset -1px -1px 0 0 #999;
+    margin: 2px 4px 4px;
+}
+
+[data-theme="classic"] .title-bar-controls button {
+    background: #222;
+    border: none;
+    box-shadow: inset -1px -1px #fff, inset 1px 1px #888;
+    flex: none;
+    height: 16px;
+    margin: 0 1px;
+    min-height: 0;
+    min-width: 0;
+    padding: 1px;
+    position: relative;
+    width: 16px;
+}
+
+[data-theme="classic"] .title-bar-controls button::after {
+    background-image: linear-gradient(to bottom right, #999, #aaa, #bbb, #ccc,
+        #ddd, #eee, #fff);
+    border: 1px solid #222;
+    box-shadow: inset 1px 1px #ccc, inset -1px -1px #888;
+    content: "";
+    inset: 1px;
+    position: absolute;
+}
+
+[data-theme="classic"] .title-bar-controls button:active::after {
+    box-shadow: none;
+}
+
+[data-theme="classic"] .title-bar-controls button[aria-label="Close"] {
+    order: -1;
+}
+
+[data-theme="classic"] .title-bar-controls button[aria-label="Minimize"],
+[data-theme="classic"] .title-bar-controls button[aria-label="Maximize"],
+[data-theme="classic"] .title-bar-controls button[aria-label="Restore"] {
+    order: 3;
+}
+
+[data-theme="classic"] .title-bar-controls button[aria-label="Maximize"]::before,
+[data-theme="classic"] .title-bar-controls button[aria-label="Restore"]::before {
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+    content: "";
+    height: 7px;
+    left: 2px;
+    position: absolute;
+    top: 2px;
+    width: 8px;
+    z-index: 1;
+}
+
+[data-theme="classic"] .title-bar-controls button[aria-label="Minimize"]::before {
+    border-bottom: 1px solid #000;
+    border-top: 1px solid #000;
+    content: "";
+    height: 4px;
+    left: 3px;
+    position: absolute;
+    right: 3px;
+    top: 6px;
+    z-index: 1;
+}
+
+[data-theme="classic"] #screen > .window > .title-bar.inactive {
+    background: none;
+}
+
+[data-theme="classic"] #screen > .window > .title-bar.inactive::before,
+[data-theme="classic"] #screen > .window > .title-bar.inactive::after {
+    background: none;
+}
+
+[data-theme="classic"] #screen > .window > .title-bar.inactive
+    > .title-bar-controls button {
+    visibility: hidden;
+}
+
+[data-theme="classic"] #screen > .window > .title-bar.inactive
+    > .title-bar-text {
+    color: grey;
+}
+
+[data-theme="classic"] #themes-list input[type="radio"] {
+    accent-color: #000;
+}
+
+[data-theme="classic"] :is(.chat-tool, .chat-form button) {
+    background: #dedede;
+    border: 1px solid #000;
+    border-radius: 3px;
+    box-shadow: var(--button-box-shadow);
+    color: #000;
+    text-shadow: none;
+}
+
+@font-face {
+    font-family: Motif;
+    src: url("font/ms_sans_serif.woff2") format("woff2"),
+        url("font/ms_sans_serif.woff") format("woff");
+}
+
+/* Motif */
+
+[data-theme="motif"] {
+    --chrome-face: #b24d7a;
+    --chrome-ink: #fff;
+    --chrome-light: #d58fad;
+    --chrome-shadow: #5a2740;
+    --pane-face: #aeb2c3;
+    --pane-ink: #000;
+    --pane-light: #dcdfeb;
+    --pane-shadow: #5b5e6b;
+    --chrome-font: Motif, "Pixelated MS Sans Serif", Arial;
+    --panel-bg: #fff;
+    --panel-ink: #222;
+    --panel-border: #5b5e6b;
+    --tab-bg: #aeb2c3;
+}
+
+[data-theme="motif"] #screen > .window:not(.active) {
+    --chrome-face: #9a9a9a;
+    --chrome-ink: #000;
+    --chrome-light: #cfcfcf;
+    --chrome-shadow: #4f4f4f;
+}
+
+[data-theme="motif"] #screen > .window {
+    background: var(--chrome-face);
+    box-shadow: inset 1px 1px var(--chrome-light),
+        inset -1px -1px var(--chrome-shadow),
+        inset 2px 2px var(--chrome-light),
+        inset -2px -2px var(--chrome-shadow),
+        inset 4px 4px var(--chrome-face),
+        inset -4px -4px var(--chrome-face),
+        inset 5px 5px var(--chrome-shadow),
+        inset -5px -5px var(--chrome-light);
+    color: var(--pane-ink);
+    padding: 5px;
+}
+
+/* CDE's corner cuts: the groove between two title boxes, carried through the
+   frame. A box is 19px, so the cut sits at 23px or the lines jog. */
+
+[data-theme="motif"] #screen > .window::after {
+    background:
+        linear-gradient(90deg, var(--chrome-shadow) 1px, var(--chrome-light) 1px)
+            left 23px top 0 / 2px 5px no-repeat,
+        linear-gradient(90deg, var(--chrome-shadow) 1px, var(--chrome-light) 1px)
+            right 23px top 0 / 2px 5px no-repeat,
+        linear-gradient(90deg, var(--chrome-shadow) 1px, var(--chrome-light) 1px)
+            left 23px bottom 0 / 2px 5px no-repeat,
+        linear-gradient(90deg, var(--chrome-shadow) 1px, var(--chrome-light) 1px)
+            right 23px bottom 0 / 2px 5px no-repeat,
+        linear-gradient(180deg, var(--chrome-shadow) 1px, var(--chrome-light) 1px)
+            left 0 top 23px / 5px 2px no-repeat,
+        linear-gradient(180deg, var(--chrome-shadow) 1px, var(--chrome-light) 1px)
+            left 0 bottom 23px / 5px 2px no-repeat,
+        linear-gradient(180deg, var(--chrome-shadow) 1px, var(--chrome-light) 1px)
+            right 0 top 23px / 5px 2px no-repeat,
+        linear-gradient(180deg, var(--chrome-shadow) 1px, var(--chrome-light) 1px)
+            right 0 bottom 23px / 5px 2px no-repeat;
+    content: "";
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+}
+
+[data-theme="motif"] .window-body {
+    background: var(--pane-face);
+    box-shadow: inset 1px 1px var(--pane-light),
+        inset -1px -1px var(--pane-shadow);
+}
+
+[data-theme="motif"] #screen > .window:not(#chat-window) .window-body a {
+    color: #a3245a;
+}
+
+[data-theme="motif"] #screen > .window > .title-bar {
+    -webkit-font-smoothing: none;
+    align-items: stretch;
+    background: none;
+    box-shadow: none;
+    color: var(--chrome-ink);
+    display: flex;
+    font-family: var(--chrome-font);
+    font-size: 11px;
+    height: 19px;
+    padding: 0;
+}
+
+[data-theme="motif"] #screen > .window > .title-bar > .title-bar-controls {
+    display: contents;
+}
+
+[data-theme="motif"] #screen > .window > .title-bar > .title-bar-text {
+    box-shadow: inset 1px 1px var(--chrome-light),
+        inset -1px -1px var(--chrome-shadow);
+    flex: 1;
+    line-height: 19px;
+    margin: 0;
+    padding: 0 6px;
+    text-align: center;
+}
+
+[data-theme="motif"] .title-bar-controls button {
+    background-color: var(--chrome-face);
+    box-shadow: inset 1px 1px var(--chrome-light),
+        inset -1px -1px var(--chrome-shadow);
+    flex: none;
+    height: 19px;
+    min-height: 0;
+    min-width: 0;
+    padding: 0;
+    position: relative;
+    width: 19px;
+}
+
+[data-theme="motif"] .title-bar-controls button::after {
+    box-shadow: inset 1px 1px var(--chrome-light),
+        inset -1px -1px var(--chrome-shadow);
+    content: "";
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* motif-css rings a focused control; CDE only sinks a held one. */
+
+[data-theme="motif"] #screen .title-bar-controls button:is(:hover, :focus,
+    :focus-visible) {
+    box-shadow: inset 1px 1px var(--chrome-light),
+        inset -1px -1px var(--chrome-shadow);
+    outline: none;
+}
+
+[data-theme="motif"] #screen .title-bar-controls button:active {
+    box-shadow: inset 1px 1px var(--chrome-shadow),
+        inset -1px -1px var(--chrome-light);
+    outline: none;
+}
+
+[data-theme="motif"] .title-bar-controls button[aria-label="Close"] {
+    order: -1;                          /* closing hangs off the window menu */
+}
+
+[data-theme="motif"] .title-bar-controls button[aria-label="Close"]::after {
+    height: 4px;
+    width: 11px;
+}
+
+[data-theme="motif"] .title-bar-controls button[aria-label="Minimize"]::after {
+    height: 5px;
+    width: 5px;
+}
+
+[data-theme="motif"] .title-bar-controls button[aria-label="Maximize"]::after,
+[data-theme="motif"] .title-bar-controls button[aria-label="Restore"]::after {
+    height: 11px;
+    width: 11px;
+}
+
+[data-theme="motif"] .title-bar-controls button:disabled {
+    opacity: 0.5;
+}
+
+[data-theme="motif"] #themes-list input[type="radio"] {
+    accent-color: #000;
+}
+
+[data-theme="motif"] :is(.window-body button, label.chat-tool) {
+    background: var(--pane-face);
+    box-shadow: inset 1px 1px var(--pane-light),
+        inset -1px -1px var(--pane-shadow);
+    color: var(--pane-ink);
+    text-shadow: none;
+}
+
+[data-theme="motif"] #screen .window-body button:focus {
+    box-shadow: inset 1px 1px var(--pane-light),
+        inset -1px -1px var(--pane-shadow);
+    outline: none;
+}
+
+[data-theme="motif"] #screen .window-body button:focus-visible {
+    outline: 1px dotted var(--pane-shadow);
+    outline-offset: -3px;
+}
+
+[data-theme="motif"] #screen .window-body button:active {
+    box-shadow: inset 1px 1px var(--pane-shadow),
+        inset -1px -1px var(--pane-light);
+}
+
+/* Counter-Strike 1.6 */
+
+[data-theme="cs16"] {
+    --chrome-face: var(--bg);
+    --chrome-ink: var(--text);
+    --chrome-light: var(--border-light);
+    --chrome-shadow: var(--border-dark);
+    --chrome-font: ArialPixel, system-ui, sans-serif;
+    --panel-bg: var(--secondary-bg);
+    --panel-ink: var(--text);
+    --panel-border: var(--border-dark);
+    --tab-bg: var(--bg);
+}
+
+[data-theme="cs16"] #screen > .window {
+    background: var(--chrome-face);
+    border: 1px solid;
+    border-color: var(--chrome-light) var(--chrome-shadow)
+        var(--chrome-shadow) var(--chrome-light);
+    color: var(--chrome-ink);
+    padding: 4px;
+}
+
+[data-theme="cs16"] #screen > .window > .title-bar {
+    align-items: center;
+    display: flex;
+    font-family: var(--chrome-font);
+    font-size: 14px;
+    justify-content: space-between;
+    padding: 2px 0 4px 2px;
+}
+
+[data-theme="cs16"] #screen > .window > .title-bar > .title-bar-text {
+    color: #fff;
+}
+
+[data-theme="cs16"] #themes-list input[type="radio"] {
+    opacity: 0;
+    position: absolute;
+}
+
+[data-theme="cs16"] #themes-list input[type="radio"] + label {
+    cursor: pointer;
+    padding-left: 20px;
+    position: relative;
+}
+
+[data-theme="cs16"] #themes-list input[type="radio"] + label::before {
+    top: 50%;
+    transform: translateY(-50%);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M10,2 11,2 11,3 10,3 M10,3 11,3 11,4 10,4 M11,4 12,4 12,5 11,5 M11,5 12,5 12,6 11,6 M11,6 12,6 12,7 11,7 M11,7 12,7 12,8 11,8 M10,8 11,8 11,9 10,9 M10,9 11,9 11,10 10,10 M8,10 9,10 9,11 8,11 M9,10 10,10 10,11 9,11 M7,11 8,11 8,12 7,12 M6,11 7,11 7,12 6,12 M5,11 6,11 6,12 5,12 M2,10 3,10 3,11 2,11 M3,10 4,10 4,11 3,11 M4,11 5,11 5,12 4,12 ' fill='%23889180'/%3E%3Cpath d='M1,2 2,2 2,3 1,3 M1,3 2,3 2,4 1,4 M2,1 3,1 3,2 2,2 M3,1 4,1 4,2 3,2 M4,0 5,0 5,1 4,1 M5,0 6,0 6,1 5,1 M6,0 7,0 7,1 6,1 M7,0 8,0 8,1 7,1 M8,1 9,1 9,2 8,2 M9,1 10,1 10,2 9,2 M0,4 1,4 1,5 0,5 M0,5 1,5 1,6 0,6 M0,6 1,6 1,7 0,7 M0,7 1,7 1,8 0,8 M1,8 2,8 2,9 1,9 M1,9 2,9 2,10 1,10 ' fill='%23292c21'/%3E%3Cpath d='M4,1 5,1 5,2 4,2 M5,1 6,1 6,2 5,2 M6,1 7,1 7,2 6,2 M7,1 8,1 8,2 7,2 M8,2 9,2 9,3 8,3 M9,2 10,2 10,3 9,3 M9,3 10,3 10,4 9,4 M9,4 10,4 10,5 9,5 M10,4 11,4 11,5 10,5 M10,5 11,5 11,6 10,6 M10,6 11,6 11,7 10,7 M10,7 11,7 11,8 10,8 M9,7 10,7 10,8 9,8 M9,8 10,8 10,9 9,9 M9,9 10,9 10,10 9,10 M8,9 9,9 9,10 8,10 M7,9 8,9 8,10 7,10 M7,10 8,10 8,11 7,11 M6,10 7,10 7,11 6,11 M5,10 6,10 6,11 5,11 M4,10 5,10 5,11 4,11 M6,9 7,9 7,10 6,10 M5,9 6,9 6,10 5,10 M4,9 5,9 5,10 4,10 M3,9 4,9 4,10 3,10 M2,9 3,9 3,10 2,10 M2,8 3,8 3,9 2,9 M1,7 2,7 2,8 1,8 M1,4 2,4 2,5 1,5 M2,3 3,3 3,4 2,4 M2,2 3,2 3,3 2,3 M3,2 4,2 4,3 3,3 M4,2 5,2 5,3 4,3 M5,2 6,2 6,3 5,3 M6,2 7,2 7,3 6,3 M7,2 8,2 8,3 7,3 M3,3 4,3 4,4 3,4 M2,4 3,4 3,5 2,5 M2,5 3,5 3,6 2,6 M1,5 2,5 2,6 1,6 M1,6 2,6 2,7 1,7 M2,6 3,6 3,7 2,7 M2,7 3,7 3,8 2,8 M3,8 4,8 4,9 3,9 M3,7 4,7 4,8 3,8 M3,6 4,6 4,7 3,7 M3,5 4,5 4,6 3,6 M3,4 4,4 4,5 3,5 M4,3 5,3 5,4 4,4 M5,3 6,3 6,4 5,4 M5,4 6,4 6,5 5,5 M4,8 5,8 5,9 4,9 M4,7 5,7 5,8 4,8 M4,6 5,6 5,7 4,7 M4,4 5,4 5,5 4,5 M4,5 5,5 5,6 4,6 M5,5 6,5 6,6 5,6 M5,6 6,6 6,7 5,7 M5,7 6,7 6,8 5,8 M5,8 6,8 6,9 5,9 M6,8 7,8 7,9 6,9 M6,7 7,7 7,8 6,8 M6,6 7,6 7,7 6,7 M6,3 7,3 7,4 6,4 M6,4 7,4 7,5 6,5 M6,5 7,5 7,6 6,6 M7,7 8,7 8,8 7,8 M7,8 8,8 8,9 7,9 M8,8 9,8 9,9 8,9 M8,7 9,7 9,8 8,8 M7,6 8,6 8,7 7,7 M7,5 8,5 8,6 7,6 M7,4 8,4 8,5 7,5 M7,3 8,3 8,4 7,4 M8,3 9,3 9,4 8,4 M8,4 9,4 9,5 8,5 M8,5 9,5 9,6 8,6 M8,6 9,6 9,7 8,7 M9,6 10,6 10,7 9,7 M9,5 10,5 10,6 9,6 ' fill='%233e4637'/%3E%3C/svg%3E");
+    content: "";
+    height: 12px;
+    left: 0;
+    position: absolute;
+    width: 12px;
+}
+
+[data-theme="cs16"] #themes-list input[type="radio"]:checked + label {
+    color: var(--accent);
+}
+
+[data-theme="cs16"] #themes-list input[type="radio"]:checked + label::after {
+    top: 50%;
+    transform: translateY(-50%);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6' viewBox='0 0 6 6'%3E%3Cpath d='M1,0 2,0 2,1 1,1 M3,0 4,0 4,1 3,1 M4,0 5,0 5,1 4,1 M4,1 5,1 5,2 4,2 M5,1 6,1 6,2 5,2 M5,2 6,2 6,3 5,3 M5,3 6,3 6,4 5,4 M5,4 6,4 6,5 5,5 M4,5 5,5 5,6 4,6 M3,5 4,5 4,6 3,6 M2,5 3,5 3,6 2,6 M1,5 2,5 2,6 1,6 M0,4 1,4 1,5 0,5 M0,3 1,3 1,4 0,4 M0,2 1,2 1,3 0,3 M1,2 2,2 2,3 1,3 M1,3 2,3 2,4 1,4 M1,4 2,4 2,5 1,5 M2,4 3,4 3,5 2,5 M2,3 3,3 3,4 2,4 M2,0 3,0 3,1 2,1 M2,1 3,1 3,2 2,2 M3,1 4,1 4,2 3,2 M3,3 4,3 4,4 3,4 M3,4 4,4 4,5 3,5 M4,4 5,4 5,5 4,5 M4,3 5,3 5,4 4,4 M4,2 5,2 5,3 4,3 M3,2 4,2 4,3 3,3 M2,2 3,2 3,3 2,3 M1,1 2,1 2,2 1,2 M0,1 1,1 1,2 0,2 ' fill='%23c4b550'/%3E%3C/svg%3E");
+    content: "";
+    height: 6px;
+    left: 3px;
+    position: absolute;
+    width: 6px;
+}
+
+[data-theme="cs16"] #screen > .window > .title-bar.inactive > .title-bar-text {
+    color: var(--text-3);
+}
+
+[data-theme="cs16"] #screen > .window > .title-bar.inactive
+    > .title-bar-controls button {
+    border-color: transparent;
+}
+
+[data-theme="cs16"] .title-bar-controls {
+    display: flex;
+    flex: none;
+    gap: 3px;
+}
+
+[data-theme="cs16"] .title-bar-controls button {
+    align-items: center;
+    background-color: var(--chrome-face);
+    border: 1px solid;
+    border-color: var(--chrome-light) var(--chrome-shadow)
+        var(--chrome-shadow) var(--chrome-light);
+    color: #fff;
+    display: flex;
+    font-family: var(--chrome-font);
+    font-size: 12px;
+    height: 18px;
+    justify-content: center;
+    line-height: 1;
+    min-height: 0;
+    min-width: 0;
+    padding: 0;
+    width: 18px;
+}
+
+[data-theme="cs16"] .title-bar-controls button:active {
+    border-color: var(--chrome-shadow) var(--chrome-light)
+        var(--chrome-light) var(--chrome-shadow);
+}
+
+[data-theme="cs16"] .title-bar-controls button:disabled {
+    opacity: 0.5;
+}
+
+[data-theme="cs16"] .title-bar-controls button[aria-label="Minimize"]::after {
+    content: "\2013";                   /* en dash, the width of a shade box */
+}
+
+[data-theme="cs16"] .title-bar-controls button[aria-label="Maximize"]::after,
+[data-theme="cs16"] .title-bar-controls button[aria-label="Restore"]::after {
+    content: "\25A1";                   /* an empty square */
+}
+
+[data-theme="cs16"] .title-bar-controls button[aria-label="Close"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M3,3 4,3 4,4 3,4 M4,3 5,3 5,4 4,4 M3,4 4,4 4,5 3,5 M4,4 5,4 5,5 4,5 M4,5 5,5 5,6 4,6 M5,5 6,5 6,6 5,6 M5,4 6,4 6,5 5,5 M5,6 6,6 6,7 5,7 M6,6 7,6 7,7 6,7 M6,5 7,5 7,6 6,6 M6,7 7,7 7,8 6,8 M6,8 7,8 7,9 6,9 M7,8 8,8 8,9 7,9 M7,7 8,7 8,8 7,8 M7,6 8,6 8,7 7,7 M8,6 9,6 9,7 8,7 M8,7 9,7 9,8 8,8 M8,8 9,8 9,9 8,9 M8,5 9,5 9,6 8,6 M9,5 10,5 10,6 9,6 M9,6 10,6 10,7 9,7 M9,4 10,4 10,5 9,5 M10,4 11,4 11,5 10,5 M10,5 11,5 11,6 10,6 M10,3 11,3 11,4 10,4 M11,3 12,3 12,4 11,4 M11,4 12,4 12,5 11,5 M9,8 10,8 10,9 9,9 M9,9 10,9 10,10 9,10 M8,9 9,9 9,10 8,10 M10,9 11,9 11,10 10,10 M10,10 11,10 11,11 10,11 M9,10 10,10 10,11 9,11 M11,10 12,10 12,11 11,11 M11,11 12,11 12,12 11,12 M10,11 11,11 11,12 10,12 M5,8 6,8 6,9 5,9 M5,9 6,9 6,10 5,10 M6,9 7,9 7,10 6,10 M4,9 5,9 5,10 4,10 M4,10 5,10 5,11 4,11 M5,10 6,10 6,11 5,11 M3,10 4,10 4,11 3,11 M3,11 4,11 4,12 3,12 M4,11 5,11 5,12 4,12 ' fill='%238c9284'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+[data-theme="cs16"] #screen > .window:not(#chat-window) :is(h1, h2, h3, p, ul,
+    ol, li, hr, footer) {
+    margin: revert;
+    padding: revert;
+}
+
+[data-theme="cs16"] .chat-message.theirs .chat-author,
+[data-theme="cs16"] .chat-text a {
+    color: var(--accent);
+}
+
+[data-theme="cs16"] .chat-text :is(pre, code) {
+    background: var(--bg);
+    box-shadow: none;
+    color: var(--text);
+}
+
+[data-theme="cs16"] #screen menu[role="tablist"] {
+    gap: 0;
+}
+
+[data-theme="cs16"] #screen menu[role="tablist"] > li {
+    background: var(--bg);
+    border: solid var(--border-light);
+    border-bottom: 0;
+    border-width: 1px 1px 0;
+    border-right-color: var(--border-dark);
+    margin-right: 1px;
+}
+
+[data-theme="cs16"] #screen menu[role="tablist"] > li > a {
+    color: #fff;
+    padding: 3px 6px;
+}
+
+[data-theme="cs16"] #screen menu[role="tablist"] > li[aria-selected="true"] > a {
+    color: var(--accent);
+}
+
+[data-theme="cs16"] :is(.chat-tool, .chat-form button) {
+    background: var(--chrome-face);
+    border: 1px solid;
+    border-color: var(--chrome-light) var(--chrome-shadow)
+        var(--chrome-shadow) var(--chrome-light);
+    box-shadow: none;
+    color: #fff;
+    text-shadow: none;
+}
+
+html:not([data-theme="98"]) .field-border {
+    border: 1px solid var(--chrome-shadow, grey);
+    padding: 2px;
+}
+
+html:not([data-theme="98"]) :is(.chat-panel, ul.tree-view) {
+    background: var(--panel-bg, #fff);
+    border: 1px solid var(--panel-border, grey);
+    border-radius: var(--panel-radius, 0);
+    box-shadow: none;
+    color: var(--panel-ink, #222);
+    margin: 0;
+}
+
+html:not([data-theme="98"]) .chat-panel {
+    padding: 0;
+}
+
+html:not([data-theme="98"]) .chat-panel::before,
+html:not([data-theme="98"]) .chat-panel::after {
+    content: none;                      /* the site's own bevel, 98's alone */
+}
+
+html:not([data-theme="98"]) ul.tree-view {
+    padding: 4px;
+}
+
+html:not([data-theme="98"]) :is(.chat-log, .chat-typing) {
+    background: var(--panel-bg, #fff);
+    color: var(--panel-ink, #222);
+}
+
+html:not([data-theme="98"]) .chat-typing {
+    opacity: 0.7;
+}
+
+:is([data-theme="system"], [data-theme="classic"], [data-theme="motif"],
+    [data-theme="cs16"]) :is(input[type="text"], input[type="search"],
+    textarea) {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius, 0);
+    color: var(--panel-ink);
+    padding: 2px 4px;
+}
+
+html:not([data-theme="98"]) .chat .status-bar {
+    display: flex;
+    gap: 2px;
+}
+
+html:not([data-theme="98"]) .chat .status-bar-field {
+    border: 1px solid var(--panel-border, grey);
+    box-shadow: none;
+    flex: 1;
+    margin: 0;
+    padding: 1px 4px;
+}
+
+html:not([data-theme="98"]) .chat .chat-connection {
+    flex: 0 0 96px;
+}
+
+html:not([data-theme="98"]):not([data-theme="xp"]):not([data-theme="7"]) :is(
+    ul.tree-view ul, ul.tree-view li) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+html:not([data-theme="98"]):not([data-theme="xp"]):not([data-theme="7"])
+    ul.tree-view ul {
+    padding-left: 12px;
+}
+
+html:not([data-theme="98"]) menu[role="tablist"] {
+    display: flex;
+    gap: 2px;
+    list-style: none;
+    margin: 0 0 -1px;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+}
+
+html:not([data-theme="98"]) menu[role="tablist"] > li {
+    background: var(--tab-bg, #e8e8e8);
+    border: 1px solid var(--panel-border, grey);
+    border-bottom: 0;
+    border-radius: var(--panel-radius, 0) var(--panel-radius, 0) 0 0;
+}
+
+html:not([data-theme="98"]) menu[role="tablist"] > li[aria-selected="true"] {
+    background: var(--panel-bg, #fff);
+    padding-bottom: 1px;
+}
+
+html:not([data-theme="98"]) menu[role="tablist"] > li > a {
+    color: inherit;
+    display: block;
+    opacity: 0.7;
+    padding: 2px 8px;
+    text-decoration: none;
+}
+
+html:not([data-theme="98"]) menu[role="tablist"] > li[aria-selected="true"] > a {
+    color: var(--panel-ink, #222);
+    opacity: 1;
+}

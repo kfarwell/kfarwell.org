@@ -20,6 +20,8 @@ var catclockWindow = document.getElementById("catclock-window");
 var kfarwellWindow = document.getElementById("kfarwell-window");
 var iconArea = document.getElementById("icons");
 var kyleApp = document.getElementById("kyle-app");
+var themesApp = document.getElementById("themes-app");
+var themesWindow = document.getElementById("themes-window");
 
 document.getElementById("credits-window")
     .querySelector(".window-body")
@@ -111,6 +113,7 @@ function manage(win) {
 
     win.addEventListener("pointerdown", function () {
         win.style.zIndex = ++frontmost;
+        focus(win);
     }, true);
 
     win.querySelector("[aria-label=Minimize]").addEventListener("click", function () {
@@ -142,6 +145,7 @@ function manage(win) {
 
     win.querySelector("[aria-label=Close]").addEventListener("click", function () {
         win.hidden = true;
+        focusTop();
     });
 
     titleBar.addEventListener("pointerdown", function (event) {
@@ -219,6 +223,34 @@ function manage(win) {
 
 var windows = [].map.call(document.querySelectorAll("#screen > .window"), manage);
 
+/* Themes mark the front window on the window, the title bar, or both. */
+function focus(win) {
+    windows.forEach(function (managed) {
+        var active = managed.element === win;
+        managed.element.classList.toggle("active", active);
+        managed.element.querySelector(".title-bar")
+            .classList.toggle("inactive", !active);
+    });
+}
+
+function focusTop() {
+    var front = null;
+    var height = -1;
+
+    windows.forEach(function (managed) {
+        var el = managed.element;
+        if (el.hidden) return;
+
+        var z = parseInt(getComputedStyle(el).zIndex, 10) || 0;
+        if (z >= height) {
+            front = el;
+            height = z;
+        }
+    });
+
+    focus(front);
+}
+
 window.addEventListener("blur", function () {
     var focused = document.activeElement;
     if (focused && focused.tagName === "IFRAME") {
@@ -287,6 +319,7 @@ document.querySelectorAll(".icon").forEach(function (icon) {
         }
         win.hidden = false;
         win.style.zIndex = ++frontmost;
+        focus(win);
     }
 
     icon.addEventListener("dblclick", open);
@@ -356,6 +389,13 @@ function updateIcons() {
 kyleApp.addEventListener("click", function () {
     kfarwellWindow.hidden = false;
     kfarwellWindow.style.zIndex = ++frontmost;
+    focus(kfarwellWindow);
+});
+
+themesApp.addEventListener("click", function () {
+    themesWindow.hidden = false;
+    themesWindow.style.zIndex = ++frontmost;
+    focus(themesWindow);
 });
 
 new MutationObserver(updateIcons).observe(kfarwellWindow, {
@@ -363,7 +403,7 @@ new MutationObserver(updateIcons).observe(kfarwellWindow, {
     attributeFilter: ["class", "hidden"]
 });
 
-var fixedSize = ["catclock-window"];
+var fixedSize = ["catclock-window", "themes-window"];
 
 function matchLayout() {
     windows.forEach(function (managed) {
@@ -385,6 +425,7 @@ function matchLayout() {
             file.window.querySelector(".window-body").appendChild(file.section);
         });
         dockTiles.appendChild(toggle);
+        dockTiles.appendChild(themesApp);
         dockTiles.appendChild(dock);
         dockTiles.appendChild(kyleApp);
         document.body.insertBefore(buttons, toasters);
@@ -403,3 +444,4 @@ function matchLayout() {
 
 desktop.addEventListener("change", matchLayout);
 matchLayout();
+focus(kfarwellWindow);

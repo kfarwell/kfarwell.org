@@ -107,11 +107,11 @@
         <ul>
           <li>
             <a href="https://github.com/jdan/98.css" target="_blank">98.css</a>
-            - Jordan&nbsp;Scales (MIT) based on Microsoft's Windows&nbsp;98
+            - Jordan&nbsp;Scales, based on Microsoft's Windows&nbsp;98
           </li>
           <li>
             <a href="https://github.com/captbaritone/webamp" target="_blank">Webamp</a>
-            - Jordan&nbsp;Eldredge (MIT) based on Nullsoft's Winamp
+            - Jordan&nbsp;Eldredge, based on Nullsoft's Winamp
           </li>
           <li>
             <a
@@ -120,19 +120,58 @@
             >
               catclock.c
             </a>
-            - Plan&nbsp;9 from Bell&nbsp;Labs (MIT) based on California Clock Company's Kit-Cat&nbsp;Klock
+            - Plan&nbsp;9 from Bell&nbsp;Labs based on California Clock Company's Kit-Cat&nbsp;Klock
           </li>
           <li>
             <a href="https://github.com/bryanbraun/after-dark-css" target="_blank">
               after-dark-css
             </a>
-            - Bryan&nbsp;Braun (MIT) based on Berkeley&nbsp;Systems' After&nbsp;Dark
+            - Bryan&nbsp;Braun, based on Berkeley&nbsp;Systems' After&nbsp;Dark
           </li>
           <li>
             <a href="https://emoji.serenityos.org" target="_blank">SerenityOS emoji</a>
-            - the SerenityOS developers (BSD&nbsp;2-Clause)
+            - the SerenityOS developers
           </li>
           <li>explode2.gif - Mark&nbsp;Overmars' Game&nbsp;Maker</li>
+        </ul>
+
+        <h2>themes</h2>
+        <ul>
+          <li>
+            <a href="https://github.com/botoxparty/XP.css" target="_blank">XP.css</a>
+            - Adam&nbsp;Hammad, based on Microsoft's Windows&nbsp;XP
+          </li>
+          <li>
+            <a href="https://github.com/khang-nd/7.css" target="_blank">7.css</a>
+            - Khang&nbsp;Nguyen&nbsp;Duy, based on Microsoft's Windows&nbsp;7
+          </li>
+          <li>
+            <a href="https://github.com/sakofchit/system.css" target="_blank">system.css</a>
+            - Sakun&nbsp;Acharige, based on Apple's System&nbsp;6
+          </li>
+          <li>
+            <a href="https://github.com/npjg/classic.css" target="_blank">classic.css</a>
+            - Nathanael&nbsp;Gentry, based on Apple's Mac&nbsp;OS&nbsp;8.1
+          </li>
+          <li>
+            <a href="https://github.com/ktkk/motif-css" target="_blank">motif-css</a>
+            - ktkk, based on OSF's Motif
+          </li>
+          <li>
+            <a href="https://github.com/ekmas/cs16.css" target="_blank">cs16.css</a>
+            - Samuel&nbsp;Breznjak, based on Valve's Counter-Strike&nbsp;1.6
+          </li>
+        </ul>
+
+        <h2>winamp skins</h2>
+        <ul>
+          <li>Winamp&nbsp;XP Lookalike - +L0+</li>
+          <li>
+            Winamp5 Classified - Sven&nbsp;Kistner, Zarko&nbsp;Jovic, GuidoD
+            and Wildrose-Wally
+          </li>
+          <li>MacOS8Amp - Gertjan&nbsp;van&nbsp;der&nbsp;Veldt</li>
+          <li>classic_mac, solaris-CDE, SteamAmp - Unknown</li>
         </ul>
 
         <h2>avatar</h2>
@@ -202,6 +241,10 @@
           <span class="dock-icon">🌚</span>
           <span class="dock-label">Dark Mode</span>
         </button>
+        <button id="themes-app" aria-label="Appearance">
+          <span class="dock-icon">🎨</span>
+          <span class="dock-label">Appearance</span>
+        </button>
       </footer>
     </div>
   </div>
@@ -253,6 +296,49 @@
     </div>
     <div class="window-body">
       <canvas id="catclock"></canvas>
+    </div>
+  </div>
+
+  <div class="window" id="themes-window" hidden>
+    <div class="title-bar">
+      <div class="title-bar-text">Appearance</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div id="themes-list">
+        <div class="field-row">
+          <input type="radio" id="theme-98" name="theme" value="98" checked />
+          <label for="theme-98">98</label>
+        </div>
+        <div class="field-row">
+          <input type="radio" id="theme-xp" name="theme" value="xp" />
+          <label for="theme-xp">XP</label>
+        </div>
+        <div class="field-row">
+          <input type="radio" id="theme-7" name="theme" value="7" />
+          <label for="theme-7">7</label>
+        </div>
+        <div class="field-row">
+          <input type="radio" id="theme-system" name="theme" value="system" />
+          <label for="theme-system">System</label>
+        </div>
+        <div class="field-row">
+          <input type="radio" id="theme-classic" name="theme" value="classic" />
+          <label for="theme-classic">Classic</label>
+        </div>
+        <div class="field-row">
+          <input type="radio" id="theme-motif" name="theme" value="motif" />
+          <label for="theme-motif">Motif</label>
+        </div>
+        <div class="field-row">
+          <input type="radio" id="theme-cs16" name="theme" value="cs16" />
+          <label for="theme-cs16">CS16</label>
+        </div>
+      </div>
     </div>
   </div>
 

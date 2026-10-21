@@ -15,6 +15,18 @@ async function developerToken() {
 const PLAYLIST_ID = "pl.u-38oWZlWtPXjj6GZ";
 const WINDOW_HEIGHT = 58;
 
+// 98 is absent: Webamp's own skin is already Winamp 2.91's.
+const SKINS = {
+  xp: "/webamp/skins/Winamp_XP_Lookalike.wsz",
+  7: "/webamp/skins/Winamp5_Classified_v5.5.wsz",
+  system: "/webamp/skins/classic_mac_v1.wsz",
+  classic: "/webamp/skins/MacOS8AmpNrml.wsz",
+  motif: "/webamp/skins/solaris-CDE.wsz",
+  cs16: "/webamp/skins/SteamAMP_V2.wsz",
+};
+
+const currentSkin = () => SKINS[document.documentElement.dataset.theme];
+
 const appEl = document.getElementById("webamp-host");
 const desktop = window.matchMedia("(min-width: 656px)");
 
@@ -341,8 +353,11 @@ async function main() {
   const left = Math.max(0, Math.round(host.width - 275 - 32));
   const top = Math.max(0, Math.round(host.height - STACK_HEIGHT - 24));
 
+  const skinUrl = currentSkin();
+
   const webamp = new Webamp({
     initialTracks,
+    ...(skinUrl == null ? {} : { initialSkin: { url: skinUrl } }),
     __customMediaClass: makeMusicKitMediaClass(music),
     windowLayout: {
       main: { position: { left, top } },
@@ -371,9 +386,39 @@ async function main() {
 
   const webampEl = appEl.querySelector("#webamp");
   webampEl.appendChild(appleWindow.wrapper);
-  matchSkinColors(webampEl);
-  await matchButtonColors(webampEl).catch((err) => console.error(err));
-  renderAuth(music);
+
+  const matchSkin = async () => {
+    matchSkinColors(webampEl);
+    await matchButtonColors(webampEl).catch((err) => console.error(err));
+    renderAuth(music);
+  };
+
+  let worn = skinUrl;
+  const wearSkin = async () => {
+    const url = currentSkin();
+    if (url === worn) return;
+    worn = url;
+    if (url == null) {
+      // Webamp's own skin lives in its store, not in a file.
+      webamp.store.dispatch({ type: "LOAD_DEFAULT_SKIN" });
+    } else {
+      webamp.setSkinFromUrl(url);
+    }
+    await webamp.skinIsLoaded();
+    await matchSkin();
+  };
+
+  new MutationObserver(() => {
+    wearSkin().catch((err) => console.error(err));
+  }).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+
+  await matchSkin();
+  // The theme can change while the player is still starting.
+  await wearSkin();
+
   appleWindowController = createWindowController(webampEl);
   addContextMenuEntry(
     () => windowState.open,

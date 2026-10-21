@@ -23,8 +23,9 @@ defmodule KfarwellWeb do
   # JavaScript in assets/.
   def static_paths do
     ~w(assets robots.txt badges font catclock toasters webamp karin icons mvdwebcam
-       98.css style.css karin.css script.js karin.js cursor.png kyle.png
-       nextstep-tile.png webamp-icon.png emoji.png emoji-LICENSE.txt)
+       themes 98.css style.css themes.css karin.css script.js themes.js karin.js
+       cursor.png kyle.png nextstep-tile.png webamp-icon.png emoji.png
+       emoji-LICENSE.txt)
   end
 
   def router do

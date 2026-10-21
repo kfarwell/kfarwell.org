@@ -1,3 +1,20 @@
+/* 98's font, declared here so it survives a change of theme. */
+@font-face {
+    font-family: "Pixelated MS Sans Serif";
+    font-style: normal;
+    font-weight: 400;
+    src: url("font/ms_sans_serif.woff2") format("woff2"),
+        url("font/ms_sans_serif.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Pixelated MS Sans Serif";
+    font-style: normal;
+    font-weight: 700;
+    src: url("font/ms_sans_serif_bold.woff2") format("woff2"),
+        url("font/ms_sans_serif_bold.woff") format("woff");
+}
+
 :root {
     --background: #000;
     --desktop-ink: #fff;
@@ -34,7 +51,6 @@ body {
 }
 
 #screen > .window {
-    background: var(--window);
     box-sizing: border-box;
     position: relative;
     font-family: inherit;
@@ -77,8 +93,18 @@ body {
 }
 
 #screen > .window > .title-bar {
-    background: linear-gradient(90deg, #a32c56, #e9658b);
     touch-action: none;
+}
+
+#screen > .window > .title-bar > .title-bar-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#screen > .window > .title-bar > .title-bar-controls {
+    flex: none;
 }
 
 #screen > .window.minimized .window-body {
@@ -104,6 +130,8 @@ body {
 #dock > * {
     box-sizing: border-box;
     position: relative;
+    border: none;
+    border-radius: 0;
     width: 64px;
     height: 64px;
     background: url("nextstep-tile.png");
@@ -180,11 +208,15 @@ body {
     height: auto;
 }
 
+/* The desktop stays the site's: no theme borders, rounding or font here. */
 .icon {
     background: none;
+    border: none;
+    border-radius: 0;
     box-shadow: none;
     min-width: 0;
     min-height: 0;
+    height: auto;
     padding: 2px;
     width: 72px;
     display: flex;
@@ -192,6 +224,8 @@ body {
     align-items: center;
     gap: 2px;
     color: var(--desktop-ink);
+    font-family: "Pixelated MS Sans Serif", Arial;
+    font-size: 11px;
     text-shadow: none;
 }
 
@@ -332,7 +366,7 @@ footer > a:hover {
     filter: brightness(1.5);
 }
 
-#toggle {
+#toggle, #themes-app {
     display: none;
     font-size: 24px;
     color: inherit;
@@ -351,7 +385,7 @@ footer > a:hover {
         transform: scaleX(-1);
     }
 
-    #dock #toggle {
+    #dock #toggle, #dock #themes-app {
         display: flex;
         border: none;
         box-shadow: none;
@@ -360,7 +394,7 @@ footer > a:hover {
         font-size: 30px;
     }
 
-    #dock #toggle .dock-icon {
+    #dock #toggle .dock-icon, #dock #themes-app .dock-icon {
         line-height: 1;
     }
 
@@ -371,10 +405,12 @@ footer > a:hover {
         height: 100%;
     }
 
+    /* --top is where a window opens; it leaves itself the room below. */
     #screen > .window {
         position: absolute;
+        top: var(--top, 0px);
         height: auto;
-        max-height: 100%;
+        max-height: calc(100% - var(--top, 0px) - 16px);
     }
 
     #screen > #catclock-window:not([hidden]) {
@@ -408,6 +444,7 @@ footer > a:hover {
     #credits-window:not([hidden]) {
         display: flex;
         width: 420px;
+        max-height: min(480px, calc(100% - var(--top, 0px) - 16px));
     }
 
     #testimonials-window h2,
@@ -417,17 +454,25 @@ footer > a:hover {
 
     #friends-window {
         left: 300px;
-        top: 140px;
+        --top: 140px;
     }
 
     #testimonials-window {
         left: 360px;
-        top: 200px;
+        --top: 200px;
     }
 
-    #credits-window {
+    #credits-window:not([hidden]) {
         left: 420px;
-        top: 260px;
+        --top: 260px;
+        width: 560px;
+    }
+
+    #themes-window:not([hidden]) {
+        display: flex;
+        left: 200px;
+        --top: 320px;
+        width: 320px;
     }
 
     #screen > #kfarwell-window {
@@ -572,6 +617,36 @@ footer > a:hover {
     min-height: 0;
     display: flex;
     padding: 4px;
+    position: relative;
+}
+
+/* The log's bevel, drawn outside it: a scrolling box paints its own
+   content over an inset shadow. */
+.chat-panel::before,
+.chat-panel::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.chat-panel::before {
+    top: 4px;
+    right: 4px;
+    bottom: 4px;
+    left: 4px;
+    border-color: grey #fff #fff grey;
+}
+
+.chat-panel::after {
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+    border-color: #0a0a0a #dfdfdf #dfdfdf #0a0a0a;
 }
 
 .chat-context-menu {
@@ -626,8 +701,6 @@ footer > a:hover {
     -webkit-user-select: text;
     user-select: text;
     background: #fff;
-    box-shadow: inset -1px -1px #fff, inset 1px 1px grey,
-        inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
     flex: 1;
     min-height: 0;
     overflow-y: auto;
@@ -764,7 +837,12 @@ footer > a:hover {
     min-width: 0;
     min-height: 0;
     height: 18px;
-    padding: 0 6px;
+    padding: 0 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    line-height: 1;
     color: #222;
     text-shadow: none;
 }
@@ -797,7 +875,7 @@ label.chat-tool.disabled span {
 }
 
 .chat-tool.wide {
-    padding: 0 8px;
+    padding: 0 5px;
 }
 
 .chat-block {
@@ -808,15 +886,15 @@ label.chat-tool.disabled span {
 }
 
 .chat-tool.h1 {
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .chat-tool.h2 {
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .chat-tool.h3 {
-    font-size: 10px;
+    font-size: 11px;
 }
 
 .chat-tool.right {
@@ -897,6 +975,7 @@ label.chat-tool.disabled span {
     grid-template-columns: repeat(auto-fill, 30px);
     justify-content: space-between;
     overflow-x: hidden;
+    row-gap: 3px;
 }
 
 .chat .chat-emoji {
