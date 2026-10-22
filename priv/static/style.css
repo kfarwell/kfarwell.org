@@ -182,9 +182,9 @@ body {
     height: 60px;
 }
 
-/* A page of its own is one window and a dock of two tiles: the way home and
-   the light switch. The tiles sit in a row along the top and the window takes
-   what is left. */
+/* A page of its own is one window and a dock of three tiles: the way home,
+   the light switch and the theme picker. The tiles sit in a row along the top
+   left and the window takes what is left. */
 
 body.page {
     grid-template-rows: auto minmax(0, 1fr);
@@ -193,7 +193,7 @@ body.page {
 body.page #dock {
     position: static;
     flex-direction: row;
-    justify-self: end;
+    justify-self: start;
     grid-row: 1;
 }
 
@@ -210,10 +210,11 @@ body.page .window-body > :last-child {
     margin-bottom: 0;
 }
 
-/* The light switch is a dock tile here at every width, where the desktop's
-   own keeps it for the dock and hides it in the footer. */
+/* The light switch and theme picker are dock tiles here at every width,
+   where the desktop's own keeps them for the dock and hides them in the
+   footer. */
 
-body.page #dock #toggle {
+body.page #dock #toggle, body.page #dock #themes-app {
     display: flex;
     border: none;
     box-shadow: none;
@@ -222,8 +223,32 @@ body.page #dock #toggle {
     font-size: 30px;
 }
 
-body.page #dock #toggle .dock-icon {
+body.page #dock #toggle .dock-icon, body.page #dock #themes-app .dock-icon {
     line-height: 1;
+}
+
+/* Over the page's window, wherever that is. */
+body.page #screen > #themes-window:not([hidden]) {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    max-width: calc(100vw - 32px);
+    height: auto;
+}
+
+body.page #screen > #themes-window.placed {
+    transform: none;
+}
+
+/* Clear of the dock's row. */
+body.page #icons {
+    top: 80px;
+}
+
+#icons .icon[hidden] {
+    display: none;
 }
 
 #icons {
@@ -459,6 +484,16 @@ footer > a:hover {
     body.page #screen > .window {
         position: relative;
         max-height: calc(100% - 48px);
+    }
+
+    body.page #icons {
+        top: 16px;
+    }
+
+    /* Out of the page's layout once dragged, resized or maximized. */
+    body.page #screen > .window.placed {
+        position: fixed;
+        max-height: none;
     }
 
     #screen {

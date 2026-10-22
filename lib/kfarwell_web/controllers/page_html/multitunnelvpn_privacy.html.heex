@@ -1,9 +1,13 @@
-<Layouts.page title={@page_title}>
+<Layouts.page title={@page_title} label="privacy.txt">
   <h1>MultiTunnelVPN Privacy Policy</h1>
   <p>
     This application does not collect or store personal data, contains no analytics or
-    advertising, and never sends anything to the developer. Your settings, keys, and
-    WireGuard configuration are stored only on your device.
+    advertising, and never sends anything to the developer. Your settings, WireGuard
+    profiles, and tailnet sign-in are stored on your device. WireGuard keys are kept in the
+    device's keychain and are never included in backups; your other settings and tailnet
+    sign-in are included in your device's backups, if you make them. Connection logs are off
+    by default; if you turn them on, they are kept only in memory on your device and are
+    erased when the VPN stops or you turn them off.
   </p>
   <p>
     Traffic sent to the developer loopback address is reflected back to your device and
@@ -12,13 +16,34 @@
   <p>
     When the tailnet is turned on, your device connects to the coordination server you
     choose (Tailscale by default). That server receives the information needed to connect
-    your devices, such as device keys, device name, operating system, and network
-    addresses, and its operator's privacy policy applies. This application asks Tailscale
-    not to collect client logs and never uploads logs.
+    your devices, such as device keys, the device name set in this application, operating
+    system, and network addresses. Your device also contacts that operator's relay servers,
+    which see your IP address and pass along encrypted traffic when two devices can't
+    connect directly. Signing in opens the operator's website. The operator's privacy
+    policy applies. This application asks Tailscale not to collect client logs and never
+    uploads logs.
   </p>
   <p>
-    When WireGuard is turned on, your internet traffic is sent, encrypted, to the server
-    in the configuration you provide, and that provider's privacy policy applies.
+    When a WireGuard profile is turned on, your internet traffic is sent, encrypted, to
+    the server in that profile's configuration, and that provider's privacy policy applies.
+  </p>
+  <p>
+    When DNS filtering is turned on, the domain names your apps look up are checked against
+    blocklists on your device, and blocked lookups are answered on the device. Other
+    lookups go to your VPN profile's resolver while it is on (if you allow that), and
+    otherwise to the resolver you choose, Cloudflare (1.1.1.1) by default, under that
+    resolver's privacy policy. Names in your tailnet are always looked up through your
+    tailnet's DNS. While the VPN is connected, the blocklists you have turned on, and any
+    you add yourself, are downloaded about once a day from the servers that host them
+    (such as their publishers' sites, GitHub, and jsDelivr), which see your IP address like
+    any website you visit. Lists you have not turned on are never downloaded, and nothing is
+    downloaded while DNS filtering is off. Only running counts of lookups are kept, in
+    memory, and no record of the names looked up is kept.
+  </p>
+  <p>
+    To remove your data, delete your VPN profiles and sign out of your tailnet accounts in
+    the application, then delete the application. Data held by your tailnet's coordination
+    server, VPN provider, or DNS resolver is covered by their own privacy policies.
   </p>
   <p>
     If you installed this application from the App Store, then Apple does collect some

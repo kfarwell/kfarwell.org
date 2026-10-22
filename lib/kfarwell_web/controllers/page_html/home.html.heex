@@ -1,5 +1,5 @@
 <div id="screen">
-  <div class="window" id="kfarwell-window">
+  <div class="window" id="kfarwell-window" data-anchored>
     <div class="title-bar">
       <div class="title-bar-text">kfarwell</div>
       <div class="title-bar-controls">
@@ -299,48 +299,7 @@
     </div>
   </div>
 
-  <div class="window" id="themes-window" hidden>
-    <div class="title-bar">
-      <div class="title-bar-text">Appearance</div>
-      <div class="title-bar-controls">
-        <button aria-label="Minimize"></button>
-        <button aria-label="Maximize"></button>
-        <button aria-label="Close"></button>
-      </div>
-    </div>
-    <div class="window-body">
-      <div id="themes-list">
-        <div class="field-row">
-          <input type="radio" id="theme-98" name="theme" value="98" checked />
-          <label for="theme-98">98</label>
-        </div>
-        <div class="field-row">
-          <input type="radio" id="theme-xp" name="theme" value="xp" />
-          <label for="theme-xp">XP</label>
-        </div>
-        <div class="field-row">
-          <input type="radio" id="theme-7" name="theme" value="7" />
-          <label for="theme-7">7</label>
-        </div>
-        <div class="field-row">
-          <input type="radio" id="theme-system" name="theme" value="system" />
-          <label for="theme-system">System</label>
-        </div>
-        <div class="field-row">
-          <input type="radio" id="theme-classic" name="theme" value="classic" />
-          <label for="theme-classic">Classic</label>
-        </div>
-        <div class="field-row">
-          <input type="radio" id="theme-motif" name="theme" value="motif" />
-          <label for="theme-motif">Motif</label>
-        </div>
-        <div class="field-row">
-          <input type="radio" id="theme-cs16" name="theme" value="cs16" />
-          <label for="theme-cs16">CS16</label>
-        </div>
-      </div>
-    </div>
-  </div>
+  <Layouts.themes_window />
 
   <div class="window" id="chat-window" hidden>
     <div class="title-bar">
@@ -362,16 +321,7 @@
 <div id="icons">
   <button class="icon app" data-opens="chat-window">
     <span class="icon-image">
-      <svg
-        width="32"
-        height="32"
-        viewBox="0 0 32 32"
-        shape-rendering="crispEdges"
-        aria-hidden="true"
-      >
-        <path d="M4 5h24v16H14l-6 6v-6H4z" fill="#fff" stroke="#000" />
-        <path d="M8 11h16M8 15h11" stroke="#808080" />
-      </svg>
+      <Layouts.icon_image kind="chat" />
     </span>
     <span class="icon-label">Chat</span>
   </button>
@@ -389,49 +339,19 @@
   </button>
   <button class="icon" data-opens="friends-window">
     <span class="icon-image">
-      <svg
-        width="32"
-        height="32"
-        viewBox="0 0 32 32"
-        shape-rendering="crispEdges"
-        aria-hidden="true"
-      >
-        <path d="M6 3h13l7 7v19H6z" fill="#fff" stroke="#000" />
-        <path d="M19 3v7h7" fill="#c0c0c0" stroke="#000" />
-        <path d="M9 14h14M9 17h14M9 20h14M9 23h9" stroke="#808080" />
-      </svg>
+      <Layouts.icon_image kind="document" />
     </span>
     <span class="icon-label">friends.txt</span>
   </button>
   <button class="icon" data-opens="testimonials-window">
     <span class="icon-image">
-      <svg
-        width="32"
-        height="32"
-        viewBox="0 0 32 32"
-        shape-rendering="crispEdges"
-        aria-hidden="true"
-      >
-        <path d="M6 3h13l7 7v19H6z" fill="#fff" stroke="#000" />
-        <path d="M19 3v7h7" fill="#c0c0c0" stroke="#000" />
-        <path d="M9 14h14M9 17h14M9 20h14M9 23h9" stroke="#808080" />
-      </svg>
+      <Layouts.icon_image kind="document" />
     </span>
     <span class="icon-label">testimonials.txt</span>
   </button>
   <button class="icon" id="credits-icon" data-opens="credits-window">
     <span class="icon-image">
-      <svg
-        width="32"
-        height="32"
-        viewBox="0 0 32 32"
-        shape-rendering="crispEdges"
-        aria-hidden="true"
-      >
-        <path d="M6 3h13l7 7v19H6z" fill="#fff" stroke="#000" />
-        <path d="M19 3v7h7" fill="#c0c0c0" stroke="#000" />
-        <path d="M9 14h14M9 17h14M9 20h14M9 23h9" stroke="#808080" />
-      </svg>
+      <Layouts.icon_image kind="document" />
     </span>
     <span class="icon-label">credits.txt</span>
   </button>
@@ -475,6 +395,8 @@
 
 <Layouts.toasters />
 
+<script src={~p"/windows.js"}>
+</script>
 <script src={~p"/script.js"}>
 </script>
 <script src={~p"/catclock/catclock.js"}>

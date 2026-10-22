@@ -21,7 +21,7 @@ defmodule KfarwellWeb do
   # LiveView JavaScript in assets/.
   def static_paths do
     ~w(assets robots.txt badges font catclock toasters webamp karin icons themes
-       98.css style.css themes.css karin.css script.js themes.js karin.js cursor.png
+       98.css style.css themes.css karin.css script.js windows.js page.js themes.js karin.js cursor.png
        kyle.png nextstep-tile.png webamp-icon.png emoji.png emoji-LICENSE.txt)
   end
 
