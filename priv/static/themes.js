@@ -2,17 +2,12 @@
  * A theme is one stylesheet: the link in the head is pointed at another file,
  * the name is written onto <html> for themes.css to read, and both are kept
  * in storage. Loaded in the head so a saved theme is in place before paint.
+ * The page hands over the paths, which carry a digest in production.
  */
 
-var themes = {
-    "98": "/98.css",
-    xp: "/themes/xp/XP.css",
-    "7": "/themes/7/7.css",
-    system: "/themes/system/system.css",
-    classic: "/themes/classic/base.css",
-    motif: "/themes/motif/motif.css",
-    cs16: "/themes/cs16/cs16.css"
-};
+var themes = JSON.parse(
+    document.getElementById("theme-styles").textContent
+);
 
 var THEME_KEY = "kfarwell:theme";
 
@@ -29,7 +24,7 @@ function toggleMode() {
 function themeLink() {
     var links = document.getElementsByTagName("link");
     var paths = Object.keys(themes).map(function (name) {
-        return themes[name];
+        return new URL(themes[name], location.href).pathname;
     });
 
     for (var i = 0; i < links.length; i += 1) {

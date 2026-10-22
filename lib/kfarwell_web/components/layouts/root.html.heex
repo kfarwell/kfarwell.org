@@ -10,19 +10,47 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <link rel="stylesheet" href="/98.css" />
-    <link rel="stylesheet" href="/toasters/toasters.css" />
-    <link rel="stylesheet" href="/style.css" />
-    <link rel="stylesheet" href="/webamp/webamp.css" />
-    <link rel="stylesheet" href="/karin.css" />
-    <link rel="stylesheet" href="/themes.css" />
+    <link rel="stylesheet" href={~p"/98.css"} />
+    <link rel="stylesheet" href={~p"/toasters/toasters.css"} />
+    <link rel="stylesheet" href={~p"/style.css"} />
+    <link rel="stylesheet" href={~p"/webamp/webamp.css"} />
+    <link rel="stylesheet" href={~p"/karin.css"} />
+    <link rel="stylesheet" href={~p"/themes.css"} />
     <link
       rel="stylesheet"
       href="https://linusg.github.io/serenityos-emoji-font/SerenityOS-Emoji.css"
     />
+    <%!-- themes.js points the link above at another of these, and finds it
+    again by what it points at, so it is given the paths the digest hands out
+    rather than keeping a list of its own. --%>
+    <script type="application/json" id="theme-styles">
+      <%= raw(
+        Jason.encode!(%{
+          "98" => ~p"/98.css",
+          "xp" => ~p"/themes/xp/XP.css",
+          "7" => ~p"/themes/7/7.css",
+          "system" => ~p"/themes/system/system.css",
+          "classic" => ~p"/themes/classic/base.css",
+          "motif" => ~p"/themes/motif/motif.css",
+          "cs16" => ~p"/themes/cs16/cs16.css"
+        })
+      ) %>
+    </script>
+    <%!-- webamp.js pulls these in as relative imports, which resolve to their
+    undigested names however the file itself was reached. The map sends each
+    to the digested one, so a deploy doesn't leave a stale copy behind. --%>
+    <script type="importmap">
+      {
+        "imports": {
+          "/webamp/genWindow.js": "<%= ~p"/webamp/genWindow.js" %>",
+          "/webamp/musicKitMedia.js": "<%= ~p"/webamp/musicKitMedia.js" %>",
+          "/webamp/playlist.js": "<%= ~p"/webamp/playlist.js" %>"
+        }
+      }
+    </script>
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
     </script>
-    <script src="/themes.js">
+    <script src={~p"/themes.js"}>
     </script>
     <script>
       const createElement = Document.prototype.createElement;
@@ -37,7 +65,7 @@
   </head>
   <body class={assigns[:body_class]}>
     {@inner_content}
-    <script src="/toasters/toasters.js">
+    <script src={~p"/toasters/toasters.js"}>
     </script>
   </body>
 </html>
