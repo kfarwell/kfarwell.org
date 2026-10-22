@@ -486,6 +486,11 @@ footer > a:hover {
         max-height: calc(100% - 48px);
     }
 
+    body.page #screen > #contact-window {
+        width: 560px;
+        height: 460px;
+    }
+
     body.page #icons {
         top: 16px;
     }
@@ -616,7 +621,8 @@ footer > a:hover {
     display: contents;
 }
 
-#chat-window .window-body {
+#chat-window .window-body,
+#contact-window .window-body {
     overflow: hidden;
     padding: 6px;
     display: flex;

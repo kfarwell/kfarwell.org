@@ -19,6 +19,7 @@ defmodule KfarwellWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/contact", PageController, :contact
     get "/mvdwebcam/privacy", PageController, :mvdwebcam_privacy
     get "/mvdwebcam/privacy.html", PageController, :privacy_html
     get "/multitunnelvpn/privacy", PageController, :multitunnelvpn_privacy

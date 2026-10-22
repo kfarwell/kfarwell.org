@@ -6,14 +6,16 @@ defmodule KfarwellWeb.Layouts do
 
   embed_templates "layouts/*"
 
+  attr :id, :string, default: "page-window"
   attr :title, :string, required: true
+  attr :icon, :string, default: "document", values: ~w(document chat)
   attr :label, :string, required: true, doc: "the desktop icon that opens the window again"
   slot :inner_block, required: true
 
   def page(assigns) do
     ~H"""
     <div id="screen">
-      <div class="window" id="page-window" data-anchored>
+      <div class="window" id={@id} data-anchored>
         <div class="title-bar">
           <div class="title-bar-text">{@title}</div>
           <div class="title-bar-controls">
@@ -31,8 +33,8 @@ defmodule KfarwellWeb.Layouts do
     </div>
 
     <div id="icons">
-      <button class="icon app" data-opens="page-window" hidden>
-        <span class="icon-image"><.icon_image kind="document" /></span>
+      <button class="icon app" data-opens={@id} hidden>
+        <span class="icon-image"><.icon_image kind={@icon} /></span>
         <span class="icon-label">{@label}</span>
       </button>
     </div>

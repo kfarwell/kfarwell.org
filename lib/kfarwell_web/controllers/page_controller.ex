@@ -5,6 +5,10 @@ defmodule KfarwellWeb.PageController do
     render(conn, :home)
   end
 
+  def contact(conn, _params) do
+    page(conn, :contact, "Contact")
+  end
+
   def mvdwebcam_privacy(conn, _params) do
     page(conn, :mvdwebcam_privacy, "MVD Webcam Privacy Policy")
   end

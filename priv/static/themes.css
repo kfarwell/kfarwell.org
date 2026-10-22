@@ -632,7 +632,7 @@ html:not([data-theme="98"]) body {
         inset -1px -1px var(--pane-shadow);
 }
 
-[data-theme="motif"] #screen > .window:not(#chat-window) .window-body a {
+[data-theme="motif"] #screen > .window:not(#chat-window, #contact-window) .window-body a {
     color: #a3245a;
 }
 
@@ -884,7 +884,7 @@ html:not([data-theme="98"]) body {
     background-repeat: no-repeat;
 }
 
-[data-theme="cs16"] #screen > .window:not(#chat-window) :is(h1, h2, h3, p, ul,
+[data-theme="cs16"] #screen > .window:not(#chat-window, #contact-window) :is(h1, h2, h3, p, ul,
     ol, li, hr, footer) {
     margin: revert;
     padding: revert;

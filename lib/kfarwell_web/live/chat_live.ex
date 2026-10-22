@@ -5,6 +5,9 @@ defmodule KfarwellWeb.ChatLive do
   Two kinds of conversation share it: the one with me, which goes to a Discord
   thread, and ones between visitors, which never touch Discord and live only in
   PubSub and each browser's storage.
+
+  On the contact page it is mine alone: the visitor sees only me and stays out
+  of everyone else's buddy list.
   """
 
   use KfarwellWeb, :live_view
@@ -36,6 +39,9 @@ defmodule KfarwellWeb.ChatLive do
       socket
       |> assign(
         visitor_id: visitor_id,
+        # Conversations with visitors are still restored and stored, only not
+        # shown, so a visit here doesn't wipe them from the browser.
+        solo: session["solo"] == true,
         nickname: "",
         # What others see us called until we pick a nickname.
         default_name: Presence.default_name(visitor_id),
@@ -64,16 +70,20 @@ defmodule KfarwellWeb.ChatLive do
       Chat.subscribe(visitor_id)
       Chat.subscribe_presence()
       :timer.send_interval(@presence_refresh, self(), :refresh_host_status)
-      Chat.subscribe_dms(visitor_id)
-      Presence.join(visitor_id, "")
 
-      {:ok,
-       socket
-       |> put_messages(@host, Chat.history(visitor_id))
-       |> assign(buddies: Presence.buddies(visitor_id))}
+      {:ok, socket |> put_messages(@host, Chat.history(visitor_id)) |> join_lobby()}
     else
       {:ok, socket}
     end
+  end
+
+  defp join_lobby(%{assigns: %{solo: true}} = socket), do: socket
+
+  defp join_lobby(socket) do
+    visitor_id = socket.assigns.visitor_id
+    Chat.subscribe_dms(visitor_id)
+    Presence.join(visitor_id, "")
+    assign(socket, buddies: Presence.buddies(visitor_id))
   end
 
   defp conversation(id, name), do: %{id: id, name: name, messages: [], unread: false}
@@ -341,6 +351,8 @@ defmodule KfarwellWeb.ChatLive do
         do: {status, label, matching}
   end
 
+  defp contacts(%{solo: true} = assigns), do: [host_contact(assigns)]
+
   defp contacts(assigns) do
     online = MapSet.new(assigns.buddies, & &1.id)
 
@@ -354,9 +366,11 @@ defmodule KfarwellWeb.ChatLive do
       |> Enum.sort_by(& &1.name)
 
     # Pinned to the top of whichever group I am in.
-    [%{id: @host, name: "kfarwell", status: host_group(assigns.host_status)}] ++
-      assigns.buddies ++ departed
+    [host_contact(assigns)] ++ assigns.buddies ++ departed
   end
+
+  defp host_contact(assigns),
+    do: %{id: @host, name: "kfarwell", status: host_group(assigns.host_status)}
 
   defp host_group(:idle), do: :away
   defp host_group(:unknown), do: :offline
