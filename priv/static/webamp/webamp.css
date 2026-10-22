@@ -14,6 +14,193 @@
     pointer-events: auto;
 }
 
+/* A window wearing the playlist's frame. */
+#webamp .am-window {
+    display: flex;
+    flex-direction: column;
+}
+
+#webamp .am-middle-center {
+    position: relative;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+/* Half the playlist's right side is the scrollbar's trough: the eight pixels
+   the handle slides down, with a pixel of frame either side. A window with
+   nothing to scroll keeps the ends of that side -- the list box's border and
+   the window's own edge -- and drops the ten between. The foot is cut the
+   same way. */
+#webamp .playlist-middle-right.am-middle-right {
+    width: 10px;
+    min-width: 10px;
+    padding-bottom: 0;
+}
+
+#webamp .playlist-middle-right.am-edge-inner {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4px;
+    min-width: 4px;
+    padding-bottom: 0;
+    background-position: top left;
+}
+
+/* The corner piece can't be cut the same way: the close box is drawn in it.
+   The six pixels it has below the fourteen the title bar is drawn in, where
+   it turns the border around the top of the list box, are carried ten to the
+   right instead, and the plain strip of the bar fills in behind. */
+#webamp .playlist-top-right-fill.am-corner-fill {
+    position: absolute;
+    top: 14px;
+    right: 15px;
+    width: 10px;
+    height: 6px;
+    background-position: left bottom;
+}
+
+#webamp .playlist-top-right.am-corner-shift {
+    position: absolute;
+    top: 14px;
+    right: 6px;
+    width: 9px;
+    height: 6px;
+    background-position: left bottom;
+}
+
+#webamp .playlist-bottom.am-bottom {
+    height: 10px;
+    min-height: 10px;
+    max-height: 10px;
+    background-position: bottom;
+}
+
+#webamp .playlist-bottom.am-foot-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 4px;
+    min-height: 4px;
+    background-position: top left;
+}
+
+/* The plain tile between the playlist's corner pieces knows nothing of the
+   turns the frame makes at the ends of the foot, so both corners are laid in
+   as well: once for the four pixels the border is drawn in, once for the six
+   the edge is. */
+#webamp .playlist-bottom-left.am-foot-left-top,
+#webamp .playlist-bottom-left.am-foot-left-bottom {
+    left: 0;
+    width: 12px;
+}
+
+#webamp .playlist-bottom-right.am-foot-join-top,
+#webamp .playlist-bottom-right.am-foot-join-bottom {
+    right: 6px;
+    width: 4px;
+}
+
+#webamp .playlist-bottom-right.am-foot-right-top,
+#webamp .playlist-bottom-right.am-foot-right-bottom {
+    right: 0;
+    width: 6px;
+}
+
+#webamp .playlist-bottom-left.am-foot-left-top,
+#webamp .playlist-bottom-right.am-foot-join-top,
+#webamp .playlist-bottom-right.am-foot-right-top {
+    top: 0;
+    height: 4px;
+}
+
+#webamp .playlist-bottom-left.am-foot-left-bottom,
+#webamp .playlist-bottom-right.am-foot-join-bottom,
+#webamp .playlist-bottom-right.am-foot-right-bottom {
+    bottom: 0;
+    height: 6px;
+}
+
+#webamp .playlist-bottom-left.am-foot-left-top {
+    background-position: left top;
+}
+
+#webamp .playlist-bottom-left.am-foot-left-bottom {
+    background-position: left bottom;
+}
+
+/* The right-hand corner is cut like the side above it: the outer columns
+   where they fell, the inner four carried ten pixels over. */
+#webamp .playlist-bottom-right.am-foot-join-top {
+    background-position: right -16px top 0;
+}
+
+#webamp .playlist-bottom-right.am-foot-join-bottom {
+    background-position: right -16px bottom 0;
+}
+
+#webamp .playlist-bottom-right.am-foot-right-top {
+    background-position: right top;
+}
+
+#webamp .playlist-bottom-right.am-foot-right-bottom {
+    background-position: right bottom;
+}
+
+/* The name stands on the line the skin writes its own on, measured off the
+   playlist's title as --am-title-base: how far the foot of its letters is
+   above the foot of the title bar. */
+#webamp .am-title {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100px;
+    padding-bottom: var(--am-title-base, 7px);
+    background-image: var(--am-plate);
+    background-size: 100% 100%;
+}
+
+#webamp .selected .am-title {
+    background-image: var(--am-plate-selected);
+}
+
+/* A generic window's own font is 7px tall and the playlist's 6px, and both
+   are written off the same line. */
+#webamp .gen-top-title.am-gen-title {
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-end;
+    height: 20px;
+    margin-top: 0;
+    padding-bottom: 8px;
+}
+
+#webamp .am-letters {
+    display: flex;
+}
+
+#webamp .am-letters-selected,
+#webamp .selected .am-letters-idle {
+    display: none;
+}
+
+#webamp .selected .am-letters-selected {
+    display: flex;
+}
+
+#webamp .am-space {
+    width: 5px;
+}
+
+#webamp .am-close {
+    position: absolute;
+    top: 3px;
+    right: 2px;
+    width: 9px;
+    height: 9px;
+}
+
 #webamp #am-body {
     position: absolute;
     top: 0;
@@ -33,7 +220,8 @@
     height: 13px;
     padding: 0 3px;
     border: 1px solid;
-    border-color: #101010 #4a4a6e #4a4a6e #101010;
+    border-color: var(--field-dark, #101010) var(--field-light, #4a4a6e)
+        var(--field-light, #4a4a6e) var(--field-dark, #101010);
     font-size: 9px;
     line-height: 13px;
 }
