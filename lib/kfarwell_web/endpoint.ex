@@ -25,7 +25,8 @@ defmodule KfarwellWeb.Endpoint do
     at: "/",
     from: :kfarwell,
     gzip: not code_reloading?,
-    only: KfarwellWeb.static_paths()
+    only: KfarwellWeb.static_paths(),
+    only_matching: KfarwellWeb.static_prefixes()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

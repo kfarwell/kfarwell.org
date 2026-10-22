@@ -25,6 +25,15 @@ defmodule KfarwellWeb do
        kyle.png nextstep-tile.png webamp-icon.png emoji.png emoji-LICENSE.txt)
   end
 
+  # Plug.Static matches a path's first segment whole, which a digested name
+  # at the root no longer is.
+  def static_prefixes do
+    static_paths()
+    |> Enum.filter(&(Path.extname(&1) != ""))
+    |> Enum.map(&Path.rootname/1)
+    |> Enum.uniq()
+  end
+
   def router do
     quote do
       use Phoenix.Router, helpers: false
