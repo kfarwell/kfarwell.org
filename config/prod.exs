@@ -7,6 +7,8 @@ import Config
 # before starting your production server.
 config :kfarwell, KfarwellWeb.Endpoint, cache_static_manifest: "priv/static/cache_manifest.json"
 
+config :kfarwell, :secure_session_cookie, true
+
 # Do not print debug messages in production
 config :logger, level: :info
 

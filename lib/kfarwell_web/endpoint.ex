@@ -9,6 +9,7 @@ defmodule KfarwellWeb.Endpoint do
     key: "_kfarwell_key",
     signing_salt: "gmcY6gs4",
     same_site: "Lax",
+    secure: Application.compile_env(:kfarwell, :secure_session_cookie, false),
     max_age: 365 * 24 * 60 * 60
   ]
 
