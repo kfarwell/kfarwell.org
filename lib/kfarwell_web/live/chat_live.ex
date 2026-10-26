@@ -551,20 +551,27 @@ defmodule KfarwellWeb.ChatLive do
          assign(socket, sending_image: false, error: "Images only go to kfarwell, sorry.")}
 
       true ->
-        [{binary, name}] =
-          consume_uploaded_entries(socket, :image, fn %{path: path}, entry ->
-            {:ok, {File.read!(path), entry.client_name}}
-          end)
+        case throttle(socket) do
+          {:error, socket} ->
+            consume_uploaded_entries(socket, :image, fn _meta, _entry -> {:ok, nil} end)
+            {:noreply, assign(socket, sending_image: false)}
 
-        visitor_id = socket.assigns.visitor_id
-        nickname = socket.assigns.nickname
+          {:ok, socket} ->
+            [{binary, name}] =
+              consume_uploaded_entries(socket, :image, fn %{path: path}, entry ->
+                {:ok, {File.read!(path), entry.client_name}}
+              end)
 
-        # Posting to Discord takes a moment, and this process cannot render
-        # while it waits.
-        {:noreply,
-         socket
-         |> assign(sending_image: true, error: nil)
-         |> start_async(:image, fn -> Chat.send_image(visitor_id, binary, name, nickname) end)}
+            visitor_id = socket.assigns.visitor_id
+            nickname = socket.assigns.nickname
+
+            # Posting to Discord takes a moment, and this process cannot render
+            # while it waits.
+            {:noreply,
+             socket
+             |> assign(sending_image: true, error: nil)
+             |> start_async(:image, fn -> Chat.send_image(visitor_id, binary, name, nickname) end)}
+        end
     end
   end
 
