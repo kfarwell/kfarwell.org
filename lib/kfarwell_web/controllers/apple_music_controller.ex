@@ -11,10 +11,10 @@ defmodule KfarwellWeb.AppleMusicController do
         |> put_resp_header("cache-control", "public, max-age=86400")
         |> json(%{token: token, expiresAt: expires_at})
 
-      {:error, reason} ->
+      {:error, _reason} ->
         conn
         |> put_status(:service_unavailable)
-        |> json(%{error: "unavailable", reason: inspect(reason)})
+        |> json(%{error: "unavailable"})
     end
   end
 end
