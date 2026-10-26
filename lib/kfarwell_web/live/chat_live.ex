@@ -383,8 +383,12 @@ defmodule KfarwellWeb.ChatLive do
     socket =
       case params["nickname"] do
         nickname when is_binary(nickname) and nickname != "" ->
-          Presence.rename(socket.assigns.visitor_id, nickname)
-          assign(socket, nickname: nickname)
+          if reserved?(nickname) do
+            socket
+          else
+            Presence.rename(socket.assigns.visitor_id, nickname)
+            assign(socket, nickname: nickname)
+          end
 
         _ ->
           socket
@@ -407,14 +411,19 @@ defmodule KfarwellWeb.ChatLive do
   end
 
   def handle_event("set_nickname", %{"nickname" => nickname}, socket) do
-    nickname = String.slice(nickname, 0, 60)
+    nickname = clip_nickname(nickname)
 
-    if nickname == socket.assigns.nickname do
-      {:noreply, socket}
-    else
-      # The thread is renamed on their next message; Discord rate-limits it.
-      Presence.rename(socket.assigns.visitor_id, nickname)
-      {:noreply, socket |> assign(nickname: nickname) |> store()}
+    cond do
+      reserved?(nickname) ->
+        {:noreply, assign(socket, error: "That name is taken.")}
+
+      nickname == socket.assigns.nickname ->
+        {:noreply, socket}
+
+      true ->
+        # The thread is renamed on their next message; Discord rate-limits it.
+        Presence.rename(socket.assigns.visitor_id, nickname)
+        {:noreply, socket |> assign(nickname: nickname, error: nil) |> store()}
     end
   end
 
@@ -695,6 +704,10 @@ defmodule KfarwellWeb.ChatLive do
       {:ok, assign(socket, sends: [now | sends])}
     end
   end
+
+  defp clip_nickname(nickname), do: String.slice(nickname, 0, 60)
+
+  defp reserved?(nickname), do: nickname |> String.downcase() |> String.contains?(@host)
 
   defp normalize(message) do
     %{
