@@ -383,6 +383,8 @@ defmodule KfarwellWeb.ChatLive do
     socket =
       case params["nickname"] do
         nickname when is_binary(nickname) and nickname != "" ->
+          nickname = clip_nickname(nickname)
+
           if reserved?(nickname) do
             socket
           else
